@@ -8,7 +8,9 @@ public class PlayerHelper : MonoBehaviour {
     void Start () {
         MyPokemonModel = new PokemonModel()
         {
-            PokemonType = ETypes.knight
+            PokemonType = ETypes.knight,
+            Health = 200,
+            Damage = 10
         };
     }
 	

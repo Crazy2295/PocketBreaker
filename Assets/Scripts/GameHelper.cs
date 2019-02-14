@@ -19,7 +19,6 @@ public class GameHelper : MonoBehaviour
 
     public Renderer maprender;
     public Text StatusText;
-    public Text CoordinatesText;
 
     Vector2 PlayerPosition =
        new Vector2(47.240342f, 38.879884f);  //Latitude, Longitude
@@ -42,7 +41,6 @@ public class GameHelper : MonoBehaviour
     private LocationInfo _loc;
     float _download = 0;
     public string Status { set { StatusText.text = value;  } }
-    public string CoordinatesStatus { set { CoordinatesText.text = value;  } }
 
     int _counter;
     IEnumerator Start()
@@ -112,23 +110,23 @@ public class GameHelper : MonoBehaviour
     private Vector3 _newUserPos;
     void UpdateMap()
     {
-        if (GpsFix && _mapLoaded)
+        if (GpsFix && _mapLoaded && UpdatedPosition)
             LoadMap(PlayerPosition);
     }
 
+    const float DistanceMapUpdate = 2;
+    Vector2 _lastPlayerPosition;
     void UpdateMyPosition()
     {
         if (GpsFix)
         {
             LocationInfo loc = Input.location.lastData;
-            if (PlayerPosition.x != loc.latitude)
-                UpdatedPosition = true;
-            else
-                UpdatedPosition = false;
-
             /// Только для телефонов --------------------------------------------------------
             //PlayerPosition.x = loc.latitude;
             //PlayerPosition.y = loc.longitude;
+
+            if (Vector3.Distance(_lastPlayerPosition, Player.position) > DistanceMapUpdate)
+                UpdatedPosition = true;
 
             if (UpdatedPosition)
             {
@@ -169,7 +167,10 @@ public class GameHelper : MonoBehaviour
             "&style=feature:road%7Ccolor:0xacaca4&style=feature:road.local%7Ccolor:0x9b7653&style=feature:poi%7Cvisibility:off" +
             "&style=feature:landscape.natural%7Celement:geometry%7Ccolor:0x008000&style=feature:water%7Ccolor:0x003F87" +
             "&style=feature:transit%7Cvisibility:off" + "&key=" + Key;
-       
+
+        _lastPlayerPosition = Player.position;
+        UpdatedPosition = false;
+
         StartCoroutine(LoadMap());
     }
 
@@ -189,8 +190,6 @@ public class GameHelper : MonoBehaviour
         {
             Debug.Log("Map Ready!");
             Status = "Map Ready!";
-            CoordinatesStatus = PlayerPosition.x.ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture)
-                + " , " + PlayerPosition.y.ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture);
             yield return new WaitForSeconds(0.5f);
             maprender.material.mainTexture = null;
             Texture2D tmp;

@@ -84,4 +84,19 @@ public class LoadPokemonData : MonoBehaviour
     {
 
     }
+
+    internal void DestroyPokemon(PokemonModel myPokemonModel)
+    {
+        PokemonHelper remove = null;
+        foreach (var item in PokemonHelpers)
+        {
+            if (item.MyPokemonModel.Id == myPokemonModel.Id)
+            {
+                remove = item;
+            }
+        }
+
+        Destroy(remove.gameObject);
+        PokemonHelpers.Remove(remove);
+    }
 }
