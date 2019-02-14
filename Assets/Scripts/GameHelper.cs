@@ -85,8 +85,8 @@ public class GameHelper : MonoBehaviour
             Debug.Log("Input.location.lastData");
             yield return new WaitForSeconds(2);
             /// Только для телефонов --------------------------------------------------------
-            PlayerPosition.x = loc.latitude;
-            PlayerPosition.y = loc.longitude;
+            //PlayerPosition.x = loc.latitude;
+            //PlayerPosition.y = loc.longitude;
 
             //Set Position
             _iniRef.x = (float)((PlayerPosition.y * 20037508.34 / 180) / 100);
@@ -127,8 +127,8 @@ public class GameHelper : MonoBehaviour
                 UpdatedPosition = false;
 
             /// Только для телефонов --------------------------------------------------------
-            PlayerPosition.x = loc.latitude;
-            PlayerPosition.y = loc.longitude;
+            //PlayerPosition.x = loc.latitude;
+            //PlayerPosition.y = loc.longitude;
 
             if (UpdatedPosition)
             {
@@ -187,7 +187,6 @@ public class GameHelper : MonoBehaviour
 
         if (www.error == null)
         {
-            Debug.Log("Updating map 100 %");
             Debug.Log("Map Ready!");
             Status = "Map Ready!";
             CoordinatesStatus = PlayerPosition.x.ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture)

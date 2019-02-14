@@ -3,10 +3,14 @@ using System.Collections;
 
 public class PlayerHelper : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+    public PokemonModel MyPokemonModel { get; set; }
+    // Use this for initialization
+    void Start () {
+        MyPokemonModel = new PokemonModel()
+        {
+            PokemonType = ETypes.knight
+        };
+    }
 	
 	// Update is called once per frame
 	void Update () {

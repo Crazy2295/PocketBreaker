@@ -6,10 +6,11 @@ public class PokemonHelper : MonoBehaviour
 {
 
     public PokemonModel MyPokemonModel { get; set; }
+    BattleHelper _battleHelper;
 
     void Start()
     {
-
+        _battleHelper = GameObject.FindObjectOfType<BattleHelper>();
     }
 
     // Update is called once per frame
@@ -20,7 +21,11 @@ public class PokemonHelper : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Destroy(gameObject);
+        if (!_battleHelper.IsBattle)
+        {
+            _battleHelper.StartBattle(MyPokemonModel);
+        }
+        //Destroy(gameObject);
     }
 
     public void LoadPokemon(PokemonModel item)

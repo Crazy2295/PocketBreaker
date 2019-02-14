@@ -6,6 +6,6 @@ using System.Text;
 
 public enum ETypes
 {
-    TestWarrior,
-    Knight
+    testWarrior,
+    knight
 }
