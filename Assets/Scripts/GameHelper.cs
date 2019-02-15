@@ -21,7 +21,7 @@ public class GameHelper : MonoBehaviour
     public Text StatusText;
 
     Vector2 PlayerPosition =
-       new Vector2(47.240342f, 38.879884f);  //Latitude, Longitude
+        new Vector2(47.240342f, 38.879884f);  //Latitude, Longitude
 
     private double tempLat;
     private double tempLon;
