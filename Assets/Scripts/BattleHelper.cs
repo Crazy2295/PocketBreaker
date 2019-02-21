@@ -7,8 +7,8 @@ public class BattleHelper : MonoBehaviour
 {
     const float Scale = 2;
 
-    public GameObject[] BattlePokemonPrefab;
-    public GameObject[] AttackPokemonPrefab;
+    public GameObject[] BattleUnitPrefab;
+    public GameObject[] AttackUnitPrefab;
 
     public GameObject MainCamera;
     public GameObject BattleCamera;
@@ -27,42 +27,41 @@ public class BattleHelper : MonoBehaviour
     public Slider EnemyHealth;
     #endregion
 
-    public BattlePokemonHelper EnemyBattleHelper { get; set; }
-    public BattlePokemonHelper PlayerBattleHelper { get; set; }
+    public BattleUnitHelper EnemyBattleHelper { get; set; }
+    public BattleUnitHelper PlayerBattleHelper { get; set; }
     public bool IsBattle { get; set; }
 
     PlayerHelper _playerHelper;
-    LoadPokemonData _loadPokemonData;
+    LoadUnitData _loadUnitData;
 
     void Start()
     {
         _playerHelper = GameObject.FindObjectOfType<PlayerHelper>();
-        _loadPokemonData = GameObject.FindObjectOfType<LoadPokemonData>();
+        _loadUnitData = GameObject.FindObjectOfType<LoadUnitData>();
 
         //InvokeRepeating("EnemyAttack", AttackSpeed, AttackSpeed);
     }
 
-    public void StartBattle(PokemonModel myPokemonModel)
+    public void StartBattle(UnitModel myUnitModel)
     {
         IsBattle = true;
         BattleVissibility(IsBattle);
 
-        GameObject player = Instantiate(BattlePokemonPrefab[(int)_playerHelper.MyPokemonModel.PokemonType]);
+        GameObject player = Instantiate(BattleUnitPrefab[(int)_playerHelper.MyUnitModel.UnitType]);
         player.transform.SetParent(PlayerBattlePosition, false);
         player.transform.localScale = new Vector3(Scale / 3, Scale / 3, Scale / 3);
 
-        PlayerBattleHelper = player.GetComponent<BattlePokemonHelper>();
-        PlayerBattleHelper.Load(_playerHelper.MyPokemonModel);
+        PlayerBattleHelper = player.GetComponent<BattleUnitHelper>();
+        PlayerBattleHelper.Load(_playerHelper.MyUnitModel);
 
-        GameObject enemy = Instantiate(BattlePokemonPrefab[(int)myPokemonModel.PokemonType]);
+        GameObject enemy = Instantiate(BattleUnitPrefab[(int)myUnitModel.UnitType]);
         enemy.transform.SetParent(EnemyBattlePosition, false);
         //enemy.transform.localScale = new Vector3(Scale, Scale, Scale);
 
-        EnemyBattleHelper = enemy.GetComponent<BattlePokemonHelper>();
-        EnemyBattleHelper.Load(myPokemonModel);
+        EnemyBattleHelper = enemy.GetComponent<BattleUnitHelper>();
+        EnemyBattleHelper.Load(myUnitModel);
 
         UpdateUI();
-        //StartCoroutine(CloseBattle());
     }
 
     private void UpdateUI()
@@ -71,7 +70,7 @@ public class BattleHelper : MonoBehaviour
         EnemyHealth.maxValue = EnemyBattleHelper.MaxHealth;
         EnemyHealth.value = EnemyBattleHelper.Health;
 
-        //PlayerPokemonName.text = PlayerBattleHelper.Name;
+        //PlayerUnitName.text = PlayerBattleHelper.Name;
         PlayerHealth.maxValue = PlayerBattleHelper.MaxHealth;
         PlayerHealth.value = PlayerBattleHelper.Health;
     }
@@ -81,12 +80,10 @@ public class BattleHelper : MonoBehaviour
         if (!IsBattle)
             return;
 
-        Debug.Log("EnemyAttack");
-
-        PlayerBattleHelper.TakeDamage(EnemyBattleHelper.MyPokemonModel.Damage);
+        PlayerBattleHelper.TakeDamage(EnemyBattleHelper.MyUnitModel.Damage);
         UpdateUI();
 
-        GameObject effect = Instantiate(AttackPokemonPrefab[(int)EnemyBattleHelper.MyPokemonModel.PokemonType]);
+        GameObject effect = Instantiate(AttackUnitPrefab[(int)EnemyBattleHelper.MyUnitModel.UnitType]);
         effect.transform.position = PlayerBattleHelper.transform.position;
         Destroy(effect, 1);
 
@@ -103,13 +100,11 @@ public class BattleHelper : MonoBehaviour
         if (!IsBattle)
             return;
 
-        Debug.Log("FightSpellButton");
-
-        EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyPokemonModel.Damage);
+        EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyUnitModel.Damage);
         UpdateUI();
 
-        //GameObject effect = Instantiate(AttackPokemonPrefab[(int)PlayerBattleHelper.MyPokemonModel.PokemonType]);
-        GameObject effect = Instantiate(AttackPokemonPrefab[(int)0]);
+        //GameObject effect = Instantiate(AttackUnitPrefab[(int)PlayerBattleHelper.MyUnitModel.UnitType]);
+        GameObject effect = Instantiate(AttackUnitPrefab[(int)0]);
         Vector3 effectPos = EnemyBattleHelper.transform.position;
         effectPos.y += 0.5f;
         effect.transform.position = effectPos;
@@ -117,7 +112,7 @@ public class BattleHelper : MonoBehaviour
 
         if (EnemyBattleHelper.IsDead)
         {
-            _loadPokemonData.DestroyPokemon(EnemyBattleHelper.MyPokemonModel);
+            _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
             IsBattle = false;
             Destroy(EnemyBattleHelper.gameObject);
             StartCoroutine(CloseBattle());

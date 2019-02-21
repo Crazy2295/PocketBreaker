@@ -20,7 +20,7 @@ public class GameHelper : MonoBehaviour
     public Renderer maprender;
     public Text StatusText;
 
-    Vector2 PlayerPosition =
+    public Vector2 PlayerPosition =
         new Vector2(47.240342f, 38.879884f);  //Latitude, Longitude
 
     private double tempLat;
@@ -45,8 +45,6 @@ public class GameHelper : MonoBehaviour
     int _counter;
     IEnumerator Start()
     {
-        yield return new WaitForSeconds(5);
-
         Input.location.Start(5, 5);
         Input.compass.enabled = true;
         Status = "Initializing Location Services..";
@@ -79,27 +77,29 @@ public class GameHelper : MonoBehaviour
         }
         else
         {
-            LocationInfo loc = Input.location.lastData;
-            Debug.Log("Input.location.lastData");
-            yield return new WaitForSeconds(2);
-            /// Только для телефонов --------------------------------------------------------
-            //PlayerPosition.x = loc.latitude;
-            //PlayerPosition.y = loc.longitude;
+            if (Input.location.status == LocationServiceStatus.Running)
+            {
+                LocationInfo loc = Input.location.lastData;
+                Debug.Log("Input.location.lastData");
+                Status = "Input.location.lastData";
+                yield return new WaitForSeconds(2);
+
+                /// Only for mobile --------------------
+                PlayerPosition.x = loc.latitude;
+                PlayerPosition.y = loc.longitude;
+            }
 
             //Set Position
-            _iniRef.x = (float)((PlayerPosition.y * 20037508.34 / 180) / 100);
-            _iniRef.z = (float)(System.Math.Log(System.Math.Tan((90 + PlayerPosition.x) 
-                * System.Math.PI / 360)) / (System.Math.PI / 180));
-            _iniRef.z = (float)((_iniRef.z * 20037508.34 / 180) / 100);
-            _iniRef.y = 0;
+            _iniRef = positionHelper(PlayerPosition);
 
-            ///Все гуд
             GpsFix = true;
+            Status = "GpsFix = " + GpsFix.ToString();
+            yield return new WaitForSeconds(2);
             LoadMap(PlayerPosition);
         }
 
         InvokeRepeating("UpdateMyPosition", 1, 0.5f);
-        InvokeRepeating("UpdateMap", 1, 5f);
+        InvokeRepeating("UpdateMap", 1, 3f);
         //  InvokeRepeating("Orientate", 1, 0.05f);
     }
 
@@ -107,7 +107,8 @@ public class GameHelper : MonoBehaviour
     private bool _mapLoaded;
     public bool UpdatedPosition { get; set; }
 
-    private Vector3 _newUserPos;
+    private int counter = 0;
+
     void UpdateMap()
     {
         if (GpsFix && _mapLoaded && UpdatedPosition)
@@ -118,27 +119,22 @@ public class GameHelper : MonoBehaviour
     Vector2 _lastPlayerPosition;
     void UpdateMyPosition()
     {
-        if (GpsFix)
+        counter++;
+        Status = counter.ToString() + " MyPosition";
+
+        if (GpsFix && Input.location.status == LocationServiceStatus.Running)
         {
             LocationInfo loc = Input.location.lastData;
+
+            Status = "Input.location.lastData";
             /// Только для телефонов --------------------------------------------------------
-            //PlayerPosition.x = loc.latitude;
-            //PlayerPosition.y = loc.longitude;
+            PlayerPosition.x = loc.latitude;
+            PlayerPosition.y = loc.longitude;
 
             if (Vector3.Distance(_lastPlayerPosition, Player.position) > DistanceMapUpdate)
                 UpdatedPosition = true;
 
-            if (UpdatedPosition)
-            {
-                _newUserPos.x = (float)(((PlayerPosition.y * 20037508.34 / 180) / 100) - _iniRef.x);
-                _newUserPos.z = (float)(System.Math.Log(System.Math.Tan((90 + PlayerPosition.x)
-                    * System.Math.PI / 360)) / (System.Math.PI / 180));
-                _newUserPos.z = (float)(((_newUserPos.z * 20037508.34 / 180) / 100) - _iniRef.z);
-
-                Player.position = _newUserPos;
-
-                UpdatedPosition = false;
-            }
+            Player.position = positionHelper(PlayerPosition, _iniRef);
         }
     }
 
@@ -152,7 +148,6 @@ public class GameHelper : MonoBehaviour
         //    heading = user.eulerAngles.y;
         //}
     }
-
 
 
 
@@ -203,10 +198,7 @@ public class GameHelper : MonoBehaviour
             yield return new WaitForSeconds(1);
             maprender.material.mainTexture = null;
         }
-
-        tempLat = PlayerPosition.x;
-        tempLon = PlayerPosition.y;
-
+        
         maprender.enabled = true;
         ReSet();
         ReScale();
@@ -216,12 +208,7 @@ public class GameHelper : MonoBehaviour
 
     void ReSet()
     {
-        Vector3 newPosition = new Vector3();
-        newPosition.x = (float)(((tempLon * 20037508.34 / 180) / 100) - _iniRef.x);
-        newPosition.z = (float)(System.Math.Log(System.Math.Tan((90 + tempLat) 
-            * System.Math.PI / 360)) / (System.Math.PI / 180));
-        newPosition.z = (float)(((newPosition.z * 20037508.34 / 180) / 100) - _iniRef.z);
-        transform.position = newPosition;
+        transform.position = positionHelper(PlayerPosition, _iniRef);
     }
 
     void ReScale()
@@ -237,5 +224,24 @@ public class GameHelper : MonoBehaviour
     void Update()
     {
 
+    }
+
+    Vector3 positionHelper (Vector2 position, Vector3 previous = new Vector3())
+    {
+        Vector3 newPosition = new Vector3();
+
+        newPosition.x = (float)((position.y * 20037508.34 / 180) / 100);
+        if (previous.x != 0)
+            newPosition.x = (float)(newPosition.x - previous.x);
+
+        newPosition.z = (float)(System.Math.Log(System.Math.Tan((90 + position.x)
+            * System.Math.PI / 360)) / (System.Math.PI / 180));
+        newPosition.z = (float)((newPosition.z * 20037508.34 / 180) / 100);
+        if (previous.z != 0)
+            newPosition.z = (float)(newPosition.z - previous.z);
+
+        newPosition.y = 0;
+
+        return newPosition;
     }
 }

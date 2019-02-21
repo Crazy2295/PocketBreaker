@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattlePokemonHelper : MonoBehaviour
+public class BattleUnitHelper : MonoBehaviour
 {
-    public PokemonModel MyPokemonModel { get; set; }
+    public UnitModel MyUnitModel { get; set; }
 
     public int MaxHealth { get; set; }
     public int Health { get; set; }
@@ -24,13 +24,13 @@ public class BattlePokemonHelper : MonoBehaviour
         
     }
 
-    internal void Load(PokemonModel myPokemonModel)
+    internal void Load(UnitModel myUnitModel)
     {
-        MyPokemonModel = myPokemonModel;
+        MyUnitModel = myUnitModel;
 
-        MaxHealth = MyPokemonModel.Health;
-        Health = MyPokemonModel.Health;
-        Name = myPokemonModel.PokemonType.ToString();
+        MaxHealth = MyUnitModel.Health;
+        Health = MyUnitModel.Health;
+        Name = myUnitModel.UnitType.ToString();
     }
 
     internal void TakeDamage(int damage)

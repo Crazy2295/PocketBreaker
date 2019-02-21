@@ -3982,6 +3982,7 @@ MonoBehaviour:
   myMap: {fileID: 1220613179}
   maprender: {fileID: 1220613177}
   StatusText: {fileID: 809400562}
+  PlayerPosition: {x: 47.24034, y: 38.879883}
   Player: {fileID: 276927010}
 --- !u!114 &1220613181
 MonoBehaviour:
@@ -3995,7 +3996,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144de834b044a974aa271dd43e9360af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PokemonPrefabs:
+  UnitPrefabs:
   - {fileID: 271710247765908542, guid: cb37bbd3cb36cc145b729f436129db77, type: 3}
   - {fileID: 2919117589157635771, guid: c5b784c2dab97f645b007688b3bc7d98, type: 3}
 --- !u!1 &1223646307
@@ -4215,7 +4216,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1320752692}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3, y: 3, z: -12}
+  m_LocalPosition: {x: -3, y: 8.02, z: -16.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 836018692}
@@ -4237,10 +4238,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d59db6440b37c344ba09423dc540c7db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BattlePokemonPrefab:
+  BattleUnitPrefab:
   - {fileID: 881375318530779413, guid: 8d6399cbb96215d42b48dfcfc86f5d41, type: 3}
   - {fileID: 3573827084634438144, guid: 7eb9c92749bcd2a45906fcc742b92d40, type: 3}
-  AttackPokemonPrefab:
+  AttackUnitPrefab:
   - {fileID: 1000014247172184, guid: 5735778fbe814ed4b9d1d7b5ac5599ea, type: 3}
   MainCamera: {fileID: 534669902}
   BattleCamera: {fileID: 836018691}
@@ -5157,7 +5158,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1751118690}
   m_LocalRotation: {x: 0, y: 0.92387956, z: 0, w: 0.38268343}
-  m_LocalPosition: {x: 0.68000007, y: 0, z: 0.14000034}
+  m_LocalPosition: {x: 1.05, y: 0, z: 0.51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1320752696}

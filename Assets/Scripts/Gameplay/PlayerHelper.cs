@@ -3,12 +3,12 @@ using System.Collections;
 
 public class PlayerHelper : MonoBehaviour {
 
-    public PokemonModel MyPokemonModel { get; set; }
+    public UnitModel MyUnitModel { get; set; }
     // Use this for initialization
     void Start () {
-        MyPokemonModel = new PokemonModel()
+        MyUnitModel = new UnitModel()
         {
-            PokemonType = ETypes.knight,
+            UnitType = ETypes.knight,
             Health = 200,
             Damage = 10
         };

@@ -2,10 +2,10 @@
 using System.Collections;
 using System;
 
-public class PokemonHelper : MonoBehaviour
+public class UnitHelper : MonoBehaviour
 {
 
-    public PokemonModel MyPokemonModel { get; set; }
+    public UnitModel MyUnitModel { get; set; }
     BattleHelper _battleHelper;
 
     void Start()
@@ -23,14 +23,14 @@ public class PokemonHelper : MonoBehaviour
     {
         if (!_battleHelper.IsBattle)
         {
-            _battleHelper.StartBattle(MyPokemonModel);
+            _battleHelper.StartBattle(MyUnitModel);
         }
         //Destroy(gameObject);
     }
 
-    public void LoadPokemon(PokemonModel item)
+    public void LoadUnit(UnitModel item)
     {
-        MyPokemonModel = item;
+        MyUnitModel = item;
 
     }
 }
