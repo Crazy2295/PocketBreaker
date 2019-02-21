@@ -80,8 +80,8 @@ public class GameHelper : MonoBehaviour
             if (Input.location.status == LocationServiceStatus.Running)
             {
                 LocationInfo loc = Input.location.lastData;
-                Debug.Log("Input.location.lastData");
-                Status = "Input.location.lastData";
+                Debug.Log("First Input.location.lastData");
+                Status = "First Input.location.lastData";
                 yield return new WaitForSeconds(2);
 
                 /// Only for mobile --------------------
@@ -127,7 +127,7 @@ public class GameHelper : MonoBehaviour
             LocationInfo loc = Input.location.lastData;
 
             Status = "Input.location.lastData";
-            /// Только для телефонов --------------------------------------------------------
+            /// Only for mobile --------------------
             PlayerPosition.x = loc.latitude;
             PlayerPosition.y = loc.longitude;
 
