@@ -9,10 +9,7 @@ public class GameHelper : MonoBehaviour
     const int WaitTime = 10;
 
     public bool GpsFix { get; set; }
-
-    /// <summary>
-    /// Url propertyes
-    /// </summary>
+    
     string Url = "";
     public Transform myMap;
     int _multiplier = 1; //1 для size=640x640 tile, 2 для size=1280*1280
@@ -84,13 +81,13 @@ public class GameHelper : MonoBehaviour
                 Status = "First Input.location.lastData";
                 yield return new WaitForSeconds(2);
 
-                /// Only for mobile --------------------
+                // Only for mobile --------------------
                 PlayerPosition.x = loc.latitude;
                 PlayerPosition.y = loc.longitude;
             }
 
             //Set Position
-            _iniRef = positionHelper(PlayerPosition);
+            _iniRef = PositionHelper(PlayerPosition);
 
             GpsFix = true;
             Status = "GpsFix = " + GpsFix.ToString();
@@ -108,6 +105,7 @@ public class GameHelper : MonoBehaviour
     public bool UpdatedPosition { get; set; }
 
     private int counter = 0;
+    private int counter1 = 0;
 
     void UpdateMap()
     {
@@ -119,22 +117,27 @@ public class GameHelper : MonoBehaviour
     Vector2 _lastPlayerPosition;
     void UpdateMyPosition()
     {
-        counter++;
-        Status = counter.ToString() + " MyPosition";
+        counter1++;
+        Status = Input.location.status.ToString() + "  " + counter1.ToString();
 
-        if (GpsFix && Input.location.status == LocationServiceStatus.Running)
+        //if (GpsFix && Input.location.status == LocationServiceStatus.Running)
+        if (GpsFix && Input.location.status != LocationServiceStatus.Stopped)
         {
+            counter++;
+            Status = counter.ToString() + " MyPosition";
+
             LocationInfo loc = Input.location.lastData;
 
             Status = "Input.location.lastData";
-            /// Only for mobile --------------------
+
+            // Only for mobile --------------------
             PlayerPosition.x = loc.latitude;
             PlayerPosition.y = loc.longitude;
 
             if (Vector3.Distance(_lastPlayerPosition, Player.position) > DistanceMapUpdate)
                 UpdatedPosition = true;
 
-            Player.position = positionHelper(PlayerPosition, _iniRef);
+            Player.position = PositionHelper(PlayerPosition, _iniRef);
         }
     }
 
@@ -150,7 +153,10 @@ public class GameHelper : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Download map from Google
+    /// </summary>
+    /// <param name="playerPosition">GPS coordinates (x,y)</param>
     private void LoadMap(Vector2 playerPosition)
     {
         _mapLoaded = false;
@@ -206,11 +212,17 @@ public class GameHelper : MonoBehaviour
         _mapLoaded = true;
     }
 
-    void ReSet()
+    /// <summary>
+    /// Reset player position for new map
+    /// </summary>
+    void ReSet() 
     {
-        transform.position = positionHelper(PlayerPosition, _iniRef);
+        transform.position = PositionHelper(PlayerPosition, _iniRef);
     }
 
+    /// <summary>
+    /// Rescale map for better display
+    /// </summary>
     void ReScale()
     {
         Vector3 newScale = myMap.localScale;
@@ -226,7 +238,13 @@ public class GameHelper : MonoBehaviour
 
     }
 
-    Vector3 positionHelper (Vector2 position, Vector3 previous = new Vector3())
+    /// <summary>
+    /// Transform position GPS coordinates to Unity position
+    /// </summary>
+    /// <param name="position">New coordinates</param>
+    /// <param name="previous">Previous coordinates</param>
+    /// <returns>Correct new coordinates values</returns>
+    Vector3 PositionHelper (Vector2 position, Vector3 previous = new Vector3())
     {
         Vector3 newPosition = new Vector3();
 
