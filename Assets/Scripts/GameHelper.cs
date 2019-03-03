@@ -17,8 +17,8 @@ public class GameHelper : MonoBehaviour
     public Renderer maprender;
     public Text StatusText;
 
-    public Vector2 PlayerPosition =
-        new Vector2(47.240342f, 38.879884f);  //Latitude, Longitude
+    private Vector2 PlayerPosition =
+        new Vector2(47.240557f, 38.883231f);  //Latitude, Longitude
 
     private double tempLat;
     private double tempLon;
@@ -38,6 +38,7 @@ public class GameHelper : MonoBehaviour
     private LocationInfo _loc;
     float _download = 0;
     public string Status { set { StatusText.text = value;  } }
+
 
     int _counter;
     IEnumerator Start()
@@ -90,7 +91,6 @@ public class GameHelper : MonoBehaviour
             _iniRef = PositionHelper(PlayerPosition);
 
             GpsFix = true;
-            Status = "GpsFix = " + GpsFix.ToString();
             yield return new WaitForSeconds(2);
             LoadMap(PlayerPosition);
         }
@@ -104,8 +104,6 @@ public class GameHelper : MonoBehaviour
     private bool _mapLoaded;
     public bool UpdatedPosition { get; set; }
 
-    private int counter = 0;
-    private int counter1 = 0;
 
     void UpdateMap()
     {
@@ -117,22 +115,16 @@ public class GameHelper : MonoBehaviour
     Vector2 _lastPlayerPosition;
     void UpdateMyPosition()
     {
-        counter1++;
-        Status = Input.location.status.ToString() + "  " + counter1.ToString();
-
-        //if (GpsFix && Input.location.status == LocationServiceStatus.Running)
-        if (GpsFix && Input.location.status != LocationServiceStatus.Stopped)
+        if (GpsFix && Input.location.status == LocationServiceStatus.Running)
+        //if (GpsFix && Input.location.status != LocationServiceStatus.Stopped)
         {
-            counter++;
-            Status = counter.ToString() + " MyPosition";
 
             LocationInfo loc = Input.location.lastData;
-
-            Status = "Input.location.lastData";
 
             // Only for mobile --------------------
             PlayerPosition.x = loc.latitude;
             PlayerPosition.y = loc.longitude;
+
 
             if (Vector3.Distance(_lastPlayerPosition, Player.position) > DistanceMapUpdate)
                 UpdatedPosition = true;

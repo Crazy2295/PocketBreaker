@@ -948,7 +948,7 @@ Transform:
   - {fileID: 534669905}
   - {fileID: 1681588271}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &276927011
 Rigidbody:
@@ -2026,49 +2026,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 621460389}
   m_CullTransparentMesh: 0
---- !u!1 &625629424
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 625629426}
-  - component: {fileID: 625629425}
-  m_Layer: 0
-  m_Name: TestGPS
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &625629425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625629424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 755b9736d6805134bb113496bb1cb621, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &625629426
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625629424}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.3777399, y: -2.2096014, z: -0.07492985}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &635569463
 GameObject:
   m_ObjectHideFlags: 0
@@ -3982,7 +3939,6 @@ MonoBehaviour:
   myMap: {fileID: 1220613179}
   maprender: {fileID: 1220613177}
   StatusText: {fileID: 809400562}
-  PlayerPosition: {x: 47.24034, y: 38.879883}
   Player: {fileID: 276927010}
 --- !u!114 &1220613181
 MonoBehaviour:
@@ -4224,7 +4180,7 @@ Transform:
   - {fileID: 1751118691}
   - {fileID: 1510536033}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1320752697
 MonoBehaviour:
