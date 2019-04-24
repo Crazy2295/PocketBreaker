@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class GameHelper : MonoBehaviour
 {
-    const string Key = "AIzaSyBvH8rkd29W1MyusMpJJ-feHnjDvUf89Ys";
+    const string KEY = "AIzaSyBvH8rkd29W1MyusMpJJ-feHnjDvUf89Ys";
     const int WaitTime = 10;
 
     public bool GpsFix { get; set; }
@@ -20,8 +20,6 @@ public class GameHelper : MonoBehaviour
     private Vector2 PlayerPosition =
         new Vector2(47.240557f, 38.883231f);  //Latitude, Longitude
 
-    private double tempLat;
-    private double tempLon;
     private Vector3 _iniRef;
 
     public Vector3 IniRef
@@ -97,13 +95,11 @@ public class GameHelper : MonoBehaviour
 
         InvokeRepeating("UpdateMyPosition", 1, 0.5f);
         InvokeRepeating("UpdateMap", 1, 3f);
-        //  InvokeRepeating("Orientate", 1, 0.05f);
     }
 
     public Transform Player;
     private bool _mapLoaded;
-    public bool UpdatedPosition { get; set; }
-
+    private bool UpdatedPosition { get; set; }
 
     void UpdateMap()
     {
@@ -112,7 +108,8 @@ public class GameHelper : MonoBehaviour
     }
 
     const float DistanceMapUpdate = 2;
-    Vector2 _lastPlayerPosition;
+    Vector2 _lastMapCenter;
+    
     void UpdateMyPosition()
     {
         if (GpsFix && Input.location.status == LocationServiceStatus.Running)
@@ -125,23 +122,11 @@ public class GameHelper : MonoBehaviour
             PlayerPosition.x = loc.latitude;
             PlayerPosition.y = loc.longitude;
 
-
-            if (Vector3.Distance(_lastPlayerPosition, Player.position) > DistanceMapUpdate)
+            if (Vector3.Distance(_lastMapCenter, Player.position) > DistanceMapUpdate)
                 UpdatedPosition = true;
 
             Player.position = PositionHelper(PlayerPosition, _iniRef);
         }
-    }
-
-    void Orientate()
-    {
-        //if (!simGPS && gpsFix)
-        //{
-        //    heading = Input.compass.trueHeading;
-        //}
-        //else {
-        //    heading = user.eulerAngles.y;
-        //}
     }
 
 
@@ -159,9 +144,9 @@ public class GameHelper : MonoBehaviour
             "&style=feature:all|element:labels|visibility:off&style=feature:landscape.man_made%7Celement:geometry%7Cvisibility:off" +
             "&style=feature:road%7Ccolor:0xacaca4&style=feature:road.local%7Ccolor:0x9b7653&style=feature:poi%7Cvisibility:off" +
             "&style=feature:landscape.natural%7Celement:geometry%7Ccolor:0x008000&style=feature:water%7Ccolor:0x003F87" +
-            "&style=feature:transit%7Cvisibility:off" + "&key=" + Key;
+            "&style=feature:transit%7Cvisibility:off" + "&key=" + KEY;
 
-        _lastPlayerPosition = Player.position;
+        _lastMapCenter = Player.position;
         UpdatedPosition = false;
 
         StartCoroutine(LoadMap());
