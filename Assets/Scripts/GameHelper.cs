@@ -109,6 +109,7 @@ public class GameHelper : MonoBehaviour
 
     const float DistanceMapUpdate = 2;
     Vector2 _lastMapCenter;
+    private Vector3 _positionForLerp;
     
     void UpdateMyPosition()
     {
@@ -125,7 +126,7 @@ public class GameHelper : MonoBehaviour
             if (Vector3.Distance(_lastMapCenter, Player.position) > DistanceMapUpdate)
                 UpdatedPosition = true;
 
-            Player.position = PositionHelper(PlayerPosition, _iniRef);
+            _positionForLerp = PositionHelper(PlayerPosition, _iniRef);
         }
     }
 
@@ -212,7 +213,8 @@ public class GameHelper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Player.position != _positionForLerp)
+            Player.position = Vector3.Lerp(Player.position, _positionForLerp, 0.15f);
     }
 
     /// <summary>
