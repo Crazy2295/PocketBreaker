@@ -11,8 +11,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.7
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 1
+  m_Center: {x: 0, y: 1.1, z: 0}
 --- !u!114 &1679966417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49,16 +49,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100208, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
       propertyPath: m_Name
-      value: TestWarrior
+      value: testWarrior
       objectReference: {fileID: 0}
-    - target: {fileID: 400166, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.01794201
-      objectReference: {fileID: 0}
-    - target: {fileID: 400166, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.1599813
-      objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 47f29fac49912c84b964c579169fe933, type: 2}
     - target: {fileID: 400208, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.056
@@ -115,14 +111,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.2
       objectReference: {fileID: 0}
-    - target: {fileID: 400330, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.02459264
-      objectReference: {fileID: 0}
-    - target: {fileID: 400330, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.004743159
-      objectReference: {fileID: 0}
     - target: {fileID: 400332, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.024592636
@@ -131,10 +119,22 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.004743161
       objectReference: {fileID: 0}
-    - target: {fileID: 9500000, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 47f29fac49912c84b964c579169fe933, type: 2}
+    - target: {fileID: 400330, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.02459264
+      objectReference: {fileID: 0}
+    - target: {fileID: 400330, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.004743159
+      objectReference: {fileID: 0}
+    - target: {fileID: 400166, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.01794201
+      objectReference: {fileID: 0}
+    - target: {fileID: 400166, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.1599813
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e53c0edb812c5344698949e4671d1a2c, type: 3}
 --- !u!1 &271710247765908542 stripped
