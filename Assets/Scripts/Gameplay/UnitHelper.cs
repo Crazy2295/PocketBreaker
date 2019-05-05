@@ -21,10 +21,10 @@ public class UnitHelper : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!_battleHelper.IsBattle)
-        {
-            _battleHelper.StartBattle(MyUnitModel);
-        }
+//        if (!_battleHelper.IsBattle)
+//        {
+//            _battleHelper.StartBattle(MyUnitModel);
+//        }
         //Destroy(gameObject);
     }
 

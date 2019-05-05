@@ -11,9 +11,9 @@ public class GameHelper : MonoBehaviour
     public bool GpsFix { get; set; }
     
     string Url = "";
-    public Transform myMap;
     int _multiplier = 1; //1 для size=640x640 tile, 2 для size=1280*1280
-
+    
+    public Transform myMap;    
     public Renderer maprender;
     public Text StatusText;
 
@@ -160,7 +160,6 @@ public class GameHelper : MonoBehaviour
         while (!www.isDone)
         {
             _download = (www.progress);
-            Debug.Log("Updating map " + System.Math.Round(_download * 100) + " %");
             Status = "Updating map " + System.Math.Round(_download * 100) + " %";
             yield return null;
         }
