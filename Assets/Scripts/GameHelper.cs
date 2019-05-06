@@ -66,13 +66,7 @@ public class GameHelper : MonoBehaviour
         GpsFix = true;
         LoadMap(PlayerPosition);
 
-        if (!Input.location.isEnabledByUser || 
-            Input.location.status == LocationServiceStatus.Stopped ||
-            Input.location.status == LocationServiceStatus.Failed)
-        {
-            GpsFix = false;
-            GPSErrorUI.SetActive(true);
-        }
+        CheckPermissions();
 
         InvokeRepeating("UpdateMyPosition", 1, 0.5f);
         InvokeRepeating("UpdateMap", 1, 3f);
@@ -94,6 +88,8 @@ public class GameHelper : MonoBehaviour
 
     void UpdateMyPosition()
     {
+        CheckPermissions();
+    
         if (GpsFix && Input.location.status == LocationServiceStatus.Running)
             //if (GpsFix && Input.location.status != LocationServiceStatus.Stopped)
         {
@@ -188,6 +184,17 @@ public class GameHelper : MonoBehaviour
         newScale.x = (float) (_multiplier * 100532.244f / (Mathf.Pow(2, _zoom)));
         newScale.z = newScale.x;
         myMap.localScale = newScale;
+    }
+
+    void CheckPermissions()
+    {
+        if (!Input.location.isEnabledByUser || 
+            Input.location.status == LocationServiceStatus.Stopped ||
+            Input.location.status == LocationServiceStatus.Failed)
+        {
+            GpsFix = false;
+            GPSErrorUI.SetActive(true);
+        }
     }
 
 
