@@ -12,14 +12,14 @@ public class LoadUnitData : MonoBehaviour
     public List<UnitModel> UnitModels { get; set; }
     public List<UnitHelper> UnitHelpers { get; set; }
 
-    GameHelper _gameHelper;
+    GPSCheck _gpsCheck;
     IEnumerator Start()
     {
         UnitModels = new List<UnitModel>();
         UnitHelpers = new List<UnitHelper>();
-        _gameHelper = GetComponent<GameHelper>();
+        _gpsCheck = GameObject.FindObjectOfType<GPSCheck>();
 
-        while (!_gameHelper.GpsFix)
+        while (!_gpsCheck.GpsOn)
         {
             Debug.Log("Wait!");
             yield return null;
@@ -67,7 +67,7 @@ public class LoadUnitData : MonoBehaviour
 
             GameObject unit = Instantiate(UnitPrefabs[(int)item.UnitType]);
             SetGeolocation setGeolocation = unit.GetComponent<SetGeolocation>();
-            setGeolocation.SetLoacation(item.Lat, item.Lon, item.Orint);
+            setGeolocation.SetLocation(item.Lat, item.Lon, item.Orint);
 
             UnitHelper unitHelper = unit.GetComponent<UnitHelper>();
             unitHelper.LoadUnit(item);

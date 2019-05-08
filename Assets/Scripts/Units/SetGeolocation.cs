@@ -9,28 +9,30 @@ public class SetGeolocation : MonoBehaviour
     public float lon;
     public float orientation;
 
-    private float initX;
-    private float initZ;
+    private float _initX;
+    private float _initZ;
 
-    private bool gpsFix;
-    private float fixLat;
-    private float fixLon;
-    private GameHelper _gameHelper;
+    private bool _gpsOn;
+    
+    private MapHelper _mapHelper;
+    private GPSCheck _gpsCheck;
+    
     void Awake()
     {
-        _gameHelper = GameObject.FindObjectOfType<GameHelper>();
-        gpsFix = _gameHelper.GpsFix;
+        _mapHelper = GameObject.FindObjectOfType<MapHelper>();
+        _gpsCheck = GameObject.FindObjectOfType<GPSCheck>();
+        _gpsOn = _gpsCheck.GpsOn;
     }
 
     IEnumerator Start()
     {
-        while (!gpsFix)
+        while (!_gpsOn)
         {
-            gpsFix = _gameHelper.GpsFix;
+            _gpsOn = _gpsCheck.GpsOn;
             yield return null;
         }
-        initX = _gameHelper.IniRef.x;
-        initZ = _gameHelper.IniRef.z;
+        _initX = _mapHelper.IniRef.x;
+        _initZ = _mapHelper.IniRef.z;
 
         yield return new WaitForSeconds(1);
         GeoLocation();
@@ -39,9 +41,9 @@ public class SetGeolocation : MonoBehaviour
     void GeoLocation()
     {
         Vector3 pos = transform.position;
-        pos.x = (float)(((lon * 20037508.34) / 18000) - initX);
+        pos.x = (float)(((lon * 20037508.34) / 18000) - _initX);
         pos.z = (float)(((Mathf.Log(Mathf.Tan((90 + lat) * Mathf.PI / 360))
-            / (Mathf.PI / 180)) * 1113.19490777778) - initZ);
+            / (Mathf.PI / 180)) * 1113.19490777778) - _initZ);
         pos.y = 0;
         transform.position = pos;
         Vector3 eAngles = transform.eulerAngles;
@@ -49,7 +51,7 @@ public class SetGeolocation : MonoBehaviour
         transform.eulerAngles = eAngles;
     }
 
-    public void SetLoacation(float latitude, float longitude, float newOrientation)
+    public void SetLocation(float latitude, float longitude, float newOrientation)
     {
         lat = latitude;
         lon = longitude;
