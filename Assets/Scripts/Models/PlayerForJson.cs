@@ -5,5 +5,4 @@
         public string email;
         public string name;
         public string bio;
-        public string birthdate;
 }

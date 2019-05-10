@@ -8,7 +8,6 @@ public class PlayerModel : MonoBehaviour
 
     public string Email { get; set; }
     public string Name { get; set; }
-    public string Birthdate { get; set; }
     public GenderEnum Gender { get; set; }
     public string Token { get; set; }
     

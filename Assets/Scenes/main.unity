@@ -7958,10 +7958,6 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: Male
-      m_Image: {fileID: 0}
-    - m_Text: Female
-      m_Image: {fileID: 0}
     - m_Text: Other
       m_Image: {fileID: 0}
   m_OnValueChanged:
@@ -8916,7 +8912,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Male
+  m_Text: Other
 --- !u!222 &1763893443
 CanvasRenderer:
   m_ObjectHideFlags: 0

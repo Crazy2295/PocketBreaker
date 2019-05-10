@@ -26,8 +26,12 @@ public class LoginForm : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        if (!PlayerPrefs.HasKey("email") || !PlayerPrefs.HasKey("password")) return;
+        
+        emailText.text = PlayerPrefs.GetString("email");
+        passwordText.text = PlayerPrefs.GetString("password");
     }
 
     public void ToRegistrationClick()
@@ -50,7 +54,10 @@ public class LoginForm : MonoBehaviour
         {
             _hideError();
 
-            string authorization = Authenticate(emailText.text, passwordText.text);
+            string email = emailText.text;
+            string password = passwordText.text;
+
+            string authorization = Authenticate(email, password);
             string url = _globalStore.ServerProtocol + _globalStore.ServerUri + "/api/token";
 
             UnityWebRequest uwr = UnityWebRequest.Get(url);
@@ -69,7 +76,10 @@ public class LoginForm : MonoBehaviour
                 PlayerForJson forJson = JsonUtility.FromJson<PlayerForJson>(uwr.downloadHandler.text);
                 
                 _playerModel.Token = forJson.token;
-                _playerModel.Email = emailText.text;
+                _playerModel.Email = email;
+                
+                PlayerPrefs.SetString("email", email);
+                PlayerPrefs.SetString("password", password);
                 _hideError();
 
                 StartCoroutine(UserDataRequest());
@@ -107,7 +117,6 @@ public class LoginForm : MonoBehaviour
             PlayerForJson forJson = JsonUtility.FromJson<PlayerForJson>(uwr.downloadHandler.text);
 
             _playerModel.name = forJson.name;
-            _playerModel.Birthdate = forJson.birthdate;
             
             _hideError();
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Models;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -32,6 +33,9 @@ public class RegistrationForm : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        List<string> mDropOptions = Enum.GetNames(typeof(GenderEnum)).ToList();
+        gender.ClearOptions();
+        gender.AddOptions(mDropOptions);
     }
 
     public void RegistrationButtonClick()
@@ -54,13 +58,16 @@ public class RegistrationForm : MonoBehaviour
         else
         {
             _hideError();
+            
+            string nameT = nameText.text;
+            string email = emailText.text;
+            string password = passwordText.text;
 
             WWWForm form = new WWWForm();
-            form.AddField("name", nameText.text);
-            form.AddField("password", passwordText.text);
-            form.AddField("email", emailText.text);
+            form.AddField("name", nameT);
+            form.AddField("password", password);
+            form.AddField("email", email);
             form.AddField("gender", (int) (GenderEnum) Enum.Parse(typeof(GenderEnum), gender.captionText.text));
-            form.AddField("birthdate", "2019-05-10");
 
             string url = _globalStore.ServerProtocol + _globalStore.ServerUri + "/api/users";
             UnityWebRequest uwr = UnityWebRequest.Post(url, form);
@@ -75,22 +82,24 @@ public class RegistrationForm : MonoBehaviour
             {
                 Debug.Log("Received: " + uwr.downloadHandler.text);
 
-                _playerModel.Name = nameText.text;
-                _playerModel.Email = emailText.text;
+                _playerModel.Name = nameT;
+                _playerModel.Email = email;
                 _playerModel.Gender = (GenderEnum) Enum.Parse(typeof(GenderEnum), gender.captionText.text);
 
+                PlayerPrefs.SetString("email", email);
+                PlayerPrefs.SetString("password", password);
                 _hideError();
                 
-                StartCoroutine(TokenRequest());
+                StartCoroutine(TokenRequest(email, password));
             }
         }
 
         registrationButton.interactable = true;
     }
 
-    private IEnumerator TokenRequest()
+    private IEnumerator TokenRequest(string email, string password)
     {
-        string authorization = LoginForm.Authenticate(emailText.text, passwordText.text);
+        string authorization = LoginForm.Authenticate(email, password);
         string url = _globalStore.ServerProtocol + _globalStore.ServerUri + "/api/token";
 
         UnityWebRequest uwr = UnityWebRequest.Get(url);
