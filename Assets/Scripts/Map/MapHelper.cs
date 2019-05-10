@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
 public class MapHelper : MonoBehaviour
 {
@@ -28,10 +29,10 @@ public class MapHelper : MonoBehaviour
     private const int MapScale = 1;
     private const int MapSize = 640;
     
-    private GPSCheck _gpsCheck;
+    private GlobalStore _globalStore;
     void Awake()
     {
-        _gpsCheck = GameObject.FindObjectOfType<GPSCheck>();
+        _globalStore = GameObject.FindObjectOfType<GlobalStore>();
     }
     
     void Start()
@@ -58,7 +59,7 @@ public class MapHelper : MonoBehaviour
 
     void UpdateMap()
     {
-        if (_gpsCheck.GpsOn && _mapLoaded && UpdatedPosition)
+        if (_globalStore.GpsOn && _mapLoaded && UpdatedPosition)
             LoadMap(_playerPosition);
     }
 
@@ -68,7 +69,7 @@ public class MapHelper : MonoBehaviour
 
     void UpdateMyPosition()
     {
-        if (_gpsCheck.GpsOn && Input.location.status == LocationServiceStatus.Running)
+        if (_globalStore.GpsOn && Input.location.status == LocationServiceStatus.Running)
         {
             LocationInfo loc = Input.location.lastData;
 
@@ -106,31 +107,30 @@ public class MapHelper : MonoBehaviour
         StartCoroutine(LoadMap());
     }
 
-    float _download = 0;
+    float _download;
     
     private IEnumerator LoadMap()
     {
-        WWW www = new WWW(_url);
+        UnityWebRequest wr = new UnityWebRequest(_url);
+        DownloadHandlerTexture texDl = new DownloadHandlerTexture(true);
+        wr.downloadHandler = texDl;
+        wr.SendWebRequest();
 
-        while (!www.isDone)
+        while (!wr.isDone)
         {
-            _download = (www.progress);
+            _download = (wr.downloadProgress);
             yield return null;
         }
 
-        if (www.error == null)
+        if (wr.error == null)
         {
             Debug.Log("Map Ready!");
             yield return new WaitForSeconds(0.5f);
-            mapRender.material.mainTexture = null;
-            Texture2D tmp;
-            tmp = new Texture2D(MapSize, MapSize, TextureFormat.RGB24, false);
-            mapRender.material.mainTexture = tmp;
-            www.LoadImageIntoTexture(tmp);
+            mapRender.material.mainTexture = texDl.texture;;
         }
         else
         {
-            Debug.Log("Map Error: " + www.error);
+            Debug.Log("Map Error: " + wr.error);
             yield return new WaitForSeconds(1);
             mapRender.material.mainTexture = null;
         }

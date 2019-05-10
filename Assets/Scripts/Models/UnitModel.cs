@@ -4,7 +4,7 @@ using System.Collections;
 public class UnitModel
 {
     public int Id { get; set; }
-    public ETypes UnitType { get; set; }
+    public UnitsEnum UnitType { get; set; }
 
     public float Lat { get; set; }
     public float Lon { get; set; }

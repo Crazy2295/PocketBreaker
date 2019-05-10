@@ -8,7 +8,7 @@ public class PlayerHelper : MonoBehaviour {
     void Start () {
         MyUnitModel = new UnitModel()
         {
-            UnitType = ETypes.knight,
+            UnitType = UnitsEnum.knight,
             Health = 200,
             Damage = 10
         };

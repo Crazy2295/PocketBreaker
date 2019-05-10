@@ -12,14 +12,14 @@ public class LoadUnitData : MonoBehaviour
     public List<UnitModel> UnitModels { get; set; }
     public List<UnitHelper> UnitHelpers { get; set; }
 
-    GPSCheck _gpsCheck;
+    private GlobalStore _globalStore;
     IEnumerator Start()
     {
         UnitModels = new List<UnitModel>();
         UnitHelpers = new List<UnitHelper>();
-        _gpsCheck = GameObject.FindObjectOfType<GPSCheck>();
+        _globalStore = GameObject.FindObjectOfType<GlobalStore>();
 
-        while (!_gpsCheck.GpsOn)
+        while (!_globalStore.GpsOn)
         {
             Debug.Log("Wait!");
             yield return null;
@@ -43,7 +43,7 @@ public class LoadUnitData : MonoBehaviour
         {
             UnitModel unitModel = new UnitModel();
             int unitTypeInt = System.Convert.ToInt32(item.Attribute("type").Value);
-            unitModel.UnitType = (ETypes)unitTypeInt;
+            unitModel.UnitType = (UnitsEnum)unitTypeInt;
 
             unitModel.Id = System.Convert.ToInt32(item.Attribute("id").Value);
 

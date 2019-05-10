@@ -15,20 +15,20 @@ public class SetGeolocation : MonoBehaviour
     private bool _gpsOn;
     
     private MapHelper _mapHelper;
-    private GPSCheck _gpsCheck;
+    private GlobalStore _globalStore;
     
     void Awake()
     {
         _mapHelper = GameObject.FindObjectOfType<MapHelper>();
-        _gpsCheck = GameObject.FindObjectOfType<GPSCheck>();
-        _gpsOn = _gpsCheck.GpsOn;
+        _globalStore = GameObject.FindObjectOfType<GlobalStore>();
+        _gpsOn = _globalStore.GpsOn;
     }
 
     IEnumerator Start()
     {
         while (!_gpsOn)
         {
-            _gpsOn = _gpsCheck.GpsOn;
+            _gpsOn = _globalStore.GpsOn;
             yield return null;
         }
         _initX = _mapHelper.IniRef.x;

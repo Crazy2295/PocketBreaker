@@ -13,7 +13,6 @@ public class BattleHelper : MonoBehaviour
     public GameObject MainCamera;
     public GameObject BattleCamera;
 
-    public GameObject MainUI;
     public GameObject BattleUI;
 
     public Transform PlayerBattlePosition;
@@ -147,7 +146,6 @@ public class BattleHelper : MonoBehaviour
         MainCamera.SetActive(!isBattle);
         BattleCamera.SetActive(isBattle);
 
-        MainUI.SetActive(!isBattle);
         BattleUI.SetActive(isBattle);
     }
 }
