@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 
-public enum ETypes
+public enum UnitsEnum
 {
     testWarrior,
     knight

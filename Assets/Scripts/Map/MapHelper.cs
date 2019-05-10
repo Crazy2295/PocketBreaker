@@ -29,10 +29,10 @@ public class MapHelper : MonoBehaviour
     private const int MapScale = 1;
     private const int MapSize = 640;
     
-    private GPSCheck _gpsCheck;
+    private GlobalStore _globalStore;
     void Awake()
     {
-        _gpsCheck = GameObject.FindObjectOfType<GPSCheck>();
+        _globalStore = GameObject.FindObjectOfType<GlobalStore>();
     }
     
     void Start()
@@ -59,7 +59,7 @@ public class MapHelper : MonoBehaviour
 
     void UpdateMap()
     {
-        if (_gpsCheck.GpsOn && _mapLoaded && UpdatedPosition)
+        if (_globalStore.GpsOn && _mapLoaded && UpdatedPosition)
             LoadMap(_playerPosition);
     }
 
@@ -69,7 +69,7 @@ public class MapHelper : MonoBehaviour
 
     void UpdateMyPosition()
     {
-        if (_gpsCheck.GpsOn && Input.location.status == LocationServiceStatus.Running)
+        if (_globalStore.GpsOn && Input.location.status == LocationServiceStatus.Running)
         {
             LocationInfo loc = Input.location.lastData;
 
