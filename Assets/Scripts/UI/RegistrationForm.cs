@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Models;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -46,6 +47,7 @@ public class RegistrationForm : MonoBehaviour
 
     private IEnumerator RegistrationRequest()
     {
+        Regex regex = new Regex(@"\w+@\w+\.\w+", RegexOptions.IgnoreCase);
         if (nameText.text.Length == 0 || emailText.text.Length == 0 ||
             passwordText.text.Length == 0 || repeatPasswordText.text.Length == 0)
         {
@@ -54,6 +56,10 @@ public class RegistrationForm : MonoBehaviour
         else if (passwordText.text != repeatPasswordText.text)
         {
             _showError("Passwords not equal");
+        }
+        else if (!regex.IsMatch(emailText.text))
+        {
+            _showError("Incorrect email");
         }
         else
         {
