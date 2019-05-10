@@ -28,10 +28,11 @@ public class LoginForm : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        if (!PlayerPrefs.HasKey("email") || !PlayerPrefs.HasKey("password")) return;
+        if (!PlayerPrefs.HasKey("token")) return;
         
-        emailText.text = PlayerPrefs.GetString("email");
-        passwordText.text = PlayerPrefs.GetString("password");
+        _playerModel.Email = PlayerPrefs.GetString("email");
+        _playerModel.Token = PlayerPrefs.GetString("token");
+        StartCoroutine(UserDataRequest(true));
     }
 
     public void ToRegistrationClick()
@@ -79,7 +80,7 @@ public class LoginForm : MonoBehaviour
                 _playerModel.Email = email;
                 
                 PlayerPrefs.SetString("email", email);
-                PlayerPrefs.SetString("password", password);
+                PlayerPrefs.SetString("token", _playerModel.Token);
                 _hideError();
 
                 StartCoroutine(UserDataRequest());
@@ -97,7 +98,7 @@ public class LoginForm : MonoBehaviour
         return auth;
     }
 
-    private IEnumerator UserDataRequest()
+    private IEnumerator UserDataRequest(bool autoConnect=false)
     {
         string url = _globalStore.ServerProtocol + _playerModel.Token + "@" + _globalStore.ServerUri + "/api/users/" + _playerModel.Email;
         Debug.Log("URL: " + url);
@@ -108,7 +109,8 @@ public class LoginForm : MonoBehaviour
         if (uwr.isNetworkError || uwr.isHttpError)
         {
             Debug.Log("Error While Sending: " + uwr.error);
-            _showError("Something wrong");
+            if(!autoConnect)
+                _showError("Something wrong");
         }
         else
         {
@@ -117,6 +119,7 @@ public class LoginForm : MonoBehaviour
             PlayerForJson forJson = JsonUtility.FromJson<PlayerForJson>(uwr.downloadHandler.text);
 
             _playerModel.name = forJson.name;
+            _playerModel.Gender = forJson.gender;
             
             _hideError();
 

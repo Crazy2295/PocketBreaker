@@ -87,7 +87,6 @@ public class RegistrationForm : MonoBehaviour
                 _playerModel.Gender = (GenderEnum) Enum.Parse(typeof(GenderEnum), gender.captionText.text);
 
                 PlayerPrefs.SetString("email", email);
-                PlayerPrefs.SetString("password", password);
                 _hideError();
                 
                 StartCoroutine(TokenRequest(email, password));
@@ -118,6 +117,7 @@ public class RegistrationForm : MonoBehaviour
             PlayerForJson forJson = JsonUtility.FromJson<PlayerForJson>(uwr.downloadHandler.text);
                 
             _playerModel.Token = forJson.token;
+            PlayerPrefs.SetString("token", _playerModel.Token);
             _hideError();
 
             _globalStore.IsMainScreen = true;
