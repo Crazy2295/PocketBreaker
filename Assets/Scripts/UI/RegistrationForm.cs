@@ -90,7 +90,7 @@ public class RegistrationForm : MonoBehaviour
 
     private IEnumerator TokenRequest()
     {
-        string authorization = _Authenticate(emailText.text, passwordText.text);
+        string authorization = LoginForm.Authenticate(emailText.text, passwordText.text);
         string url = _globalStore.ServerProtocol + _globalStore.ServerUri + "/api/token";
 
         UnityWebRequest uwr = UnityWebRequest.Get(url);
@@ -117,14 +117,6 @@ public class RegistrationForm : MonoBehaviour
         }
 
         registrationButton.interactable = true;
-    }
-
-    private string _Authenticate(string email, string password)
-    {
-        string auth = email + ":" + password;
-        auth = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(auth));
-        auth = "Basic " + auth;
-        return auth;
     }
 
     private void _showError(string error)

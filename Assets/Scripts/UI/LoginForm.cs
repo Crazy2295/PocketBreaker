@@ -50,7 +50,7 @@ public class LoginForm : MonoBehaviour
         {
             _hideError();
 
-            string authorization = _Authenticate(emailText.text, passwordText.text);
+            string authorization = Authenticate(emailText.text, passwordText.text);
             string url = _globalStore.ServerProtocol + _globalStore.ServerUri + "/api/token";
 
             UnityWebRequest uwr = UnityWebRequest.Get(url);
@@ -79,10 +79,10 @@ public class LoginForm : MonoBehaviour
         loginButton.interactable = true;
     }
 
-    private string _Authenticate(string email, string password)
+    public static string Authenticate(string email, string password)
     {
         string auth = email + ":" + password;
-        auth = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(auth));
+        auth = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("UTF-8").GetBytes(auth));
         auth = "Basic " + auth;
         return auth;
     }
@@ -93,7 +93,6 @@ public class LoginForm : MonoBehaviour
         Debug.Log("URL: " + url);
 
         UnityWebRequest uwr = UnityWebRequest.Get(url);
-//        uwr.SetRequestHeader("AUTHORIZATION", authorization);
         yield return uwr.SendWebRequest();
 
         if (uwr.isNetworkError || uwr.isHttpError)
