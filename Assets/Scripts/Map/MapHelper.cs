@@ -14,7 +14,7 @@ public class MapHelper : MonoBehaviour
     public Transform player;
 
     private Vector2 _playerPosition =
-        new Vector2(47.240557f, 38.883231f); //Latitude, Longitude
+        new Vector2(47.206657f, 38.929186f); //Latitude, Longitude
 
     private Vector3 _iniRef;
 

@@ -10,13 +10,13 @@ public class LoadUnitData : MonoBehaviour
     string _xml = "";
 
     public List<UnitModel> UnitModels { get; set; }
-    public List<UnitHelper> UnitHelpers { get; set; }
+    public List<UnitHelper> Units { get; set; }
 
     private GlobalStore _globalStore;
     IEnumerator Start()
     {
         UnitModels = new List<UnitModel>();
-        UnitHelpers = new List<UnitHelper>();
+        Units = new List<UnitHelper>();
         _globalStore = GameObject.FindObjectOfType<GlobalStore>();
 
         while (!_globalStore.GpsOn)
@@ -25,7 +25,7 @@ public class LoadUnitData : MonoBehaviour
             yield return null;
         }
 
-        WWW www = new WWW("https://drive.google.com/uc?authuser=0&id=1xeJ8hw-xwhK_6s0E0sbCfkWB0cMgrUDO&export=download");
+        var www = new WWW("https://drive.google.com/uc?authuser=0&id=1xeJ8hw-xwhK_6s0E0sbCfkWB0cMgrUDO&export=download");
         while (!www.isDone)
         {
             yield return null;
@@ -65,14 +65,18 @@ public class LoadUnitData : MonoBehaviour
         {
             var item = UnitModels[i];
 
-            GameObject unit = Instantiate(UnitPrefabs[(int)item.UnitType]);
-            SetGeolocation setGeolocation = unit.GetComponent<SetGeolocation>();
+            var unit = Instantiate(UnitPrefabs[(int)item.UnitType]);
+            unit.AddComponent<CapsuleCollider>();
+            var setGeolocation = unit.GetComponent<SetGeolocation>();
             setGeolocation.SetLocation(item.Lat, item.Lon, item.Orint);
-
-            UnitHelper unitHelper = unit.GetComponent<UnitHelper>();
+            
+            var unitHelper = unit.GetComponent<UnitHelper>();
             unitHelper.LoadUnit(item);
 
-            UnitHelpers.Add(unitHelper);
+            var touch = unit.AddComponent<MapUnitTouch>();
+            touch.unitHelper = unitHelper;
+            
+            Units.Add(unitHelper);
         }
 
 
@@ -81,13 +85,13 @@ public class LoadUnitData : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+      
     }
 
     internal void DestroyUnit(UnitModel myUnitModel)
     {
         UnitHelper remove = null;
-        foreach (var item in UnitHelpers)
+        foreach (var item in Units)
         {
             if (item.MyUnitModel.Id == myUnitModel.Id)
             {
@@ -96,6 +100,6 @@ public class LoadUnitData : MonoBehaviour
         }
 
         Destroy(remove.gameObject);
-        UnitHelpers.Remove(remove);
+        Units.Remove(remove);
     }
 }
