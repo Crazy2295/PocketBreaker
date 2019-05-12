@@ -133,7 +133,7 @@ public class BattleHelper : MonoBehaviour
 
     private IEnumerator CloseBattle()
     {
-        Destroy(Find("Background").GetComponent<DeviceCameraRenderer>());
+        Destroy(Find("ARBackground").GetComponent<DeviceCameraRenderer>());
         yield return new WaitForSeconds(2);
         EndBattle();
     }
