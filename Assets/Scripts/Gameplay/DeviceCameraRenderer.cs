@@ -10,7 +10,7 @@ public class DeviceCameraRenderer: MonoBehaviour
     void Start()
     {
         Debug.Log("Script has been started");
-        if (plane == null) plane = GameObject.FindWithTag("Background"); 
+        if (plane == null) plane = GameObject.FindWithTag("ARBackground"); 
         webCamera = new WebCamTexture();
         plane.GetComponent<Renderer>().material.mainTexture = webCamera;
         webCamera.Play();
