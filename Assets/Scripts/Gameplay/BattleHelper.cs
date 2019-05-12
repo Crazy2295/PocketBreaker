@@ -48,9 +48,8 @@ public class BattleHelper : MonoBehaviour
         IsBattle = true;
         if (_globalStore.IsAugmented)
         {
-            Find("ARBackground").AddComponent<DeviceCameraRenderer>();
+            Find("Background").AddComponent<DeviceCameraRenderer>();
             Find("BattleGround").SetActive(false);
-            Find("Background").SetActive(false);
         }
         BattleVissibility(IsBattle);
 
