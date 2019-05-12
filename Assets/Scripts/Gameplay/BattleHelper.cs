@@ -46,13 +46,13 @@ public class BattleHelper : MonoBehaviour
     public void StartBattle(UnitModel myUnitModel)
     {
         IsBattle = true;
+       
+        BattleVissibility(IsBattle);
         if (_globalStore.IsAugmented)
         {
-            Find("Background").AddComponent<DeviceCameraRenderer>();
             Find("BattleGround").SetActive(false);
+            Find("ARBackground").AddComponent<DeviceCameraRenderer>();
         }
-        BattleVissibility(IsBattle);
-
         GameObject player = Instantiate(BattleUnitPrefab[(int)_playerHelper.MyUnitModel.UnitType]);
         player.transform.SetParent(PlayerBattlePosition, false);
         player.transform.localScale = new Vector3(Scale / 3, Scale / 3, Scale / 3);
@@ -133,12 +133,14 @@ public class BattleHelper : MonoBehaviour
 
     private IEnumerator CloseBattle()
     {
+        Destroy(Find("Background").GetComponent<DeviceCameraRenderer>());
         yield return new WaitForSeconds(2);
         EndBattle();
     }
 
     public void EndBattle()
     {
+        
         IsBattle = false;
         BattleVissibility(IsBattle);
     }
