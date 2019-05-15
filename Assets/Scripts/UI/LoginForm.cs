@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using socket.io;
 
 public class LoginForm : MonoBehaviour
 {
@@ -121,11 +123,43 @@ public class LoginForm : MonoBehaviour
             _playerModel.Gender = forJson.gender;
             
             _hideError();
-
-            _globalStore.IsMainScreen = true;
-            _globalStore.IsMenuMode = false;
-            MainMenuUI.SetActive(false);
+            
+            SocketConnection();
         }
+    }
+
+    private void SocketConnection()
+    {
+        var serverUrl = _globalStore.ServerProtocol + _globalStore.ServerUri;
+        var socket = Socket.Connect(serverUrl);
+        
+        socket.On(SystemEvents.connect, () => {
+            Debug.Log("Socket connected");
+            _globalStore.socket = socket;
+            _globalStore.SocketSet = true;
+
+            _hideError();
+            _deactivateMainMenu();
+        });
+        
+        socket.On(SystemEvents.connectError, (System.Exception error) =>
+        {
+            Debug.Log("Socket connect error " + error);
+            _showError("Socket error");
+        });
+        
+        socket.On(SystemEvents.connectTimeOut, () =>
+        {
+            Debug.Log("Socket connect TimeOut");
+            _showError("Socket error");
+        });
+    }
+
+    private void _deactivateMainMenu()
+    {
+        _globalStore.IsMainScreen = true;
+        _globalStore.IsMenuMode = false;
+        MainMenuUI.SetActive(false);
     }
 
     private void _showError(string error)
