@@ -16,27 +16,28 @@ public class GPSCheck : MonoBehaviour
     {
         Input.location.Start(5, 5);
         Input.compass.enabled = true;
+        _globalStore.GpsOn = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_globalStore.IsMenuMode) 
-            return;
-        
-        if (!Input.location.isEnabledByUser ||
-            Input.location.status == LocationServiceStatus.Stopped ||
-            Input.location.status == LocationServiceStatus.Failed)
-        {
-            _globalStore.GpsOn = false;
-            GPSErrorUI.SetActive(true);
-        }
-        else
-        {
-            _globalStore.GpsOn = true;
-            GPSErrorUI.SetActive(false);
-
-            Input.location.Start(5, 5);
-        }
+//        if (_globalStore.IsMenuMode) 
+//            return;
+//        
+//        if (!Input.location.isEnabledByUser ||
+//            Input.location.status == LocationServiceStatus.Stopped ||
+//            Input.location.status == LocationServiceStatus.Failed)
+//        {
+//            _globalStore.GpsOn = false;
+//            GPSErrorUI.SetActive(true);
+//        }
+//        else
+//        {
+//            _globalStore.GpsOn = true;
+//            GPSErrorUI.SetActive(false);
+//
+//            Input.location.Start(5, 5);
+//        }
     }
 }

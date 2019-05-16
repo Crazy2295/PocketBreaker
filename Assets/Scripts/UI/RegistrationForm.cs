@@ -7,6 +7,7 @@ using Models;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using socket.io;
 
 public class RegistrationForm : MonoBehaviour
 {
@@ -126,12 +127,44 @@ public class RegistrationForm : MonoBehaviour
             PlayerPrefs.SetString("token", _playerModel.Token);
             _hideError();
 
-            _globalStore.IsMainScreen = true;
-            _globalStore.IsMenuMode = false;
-            MainMenuUI.SetActive(false);
+            SocketConnection();
         }
 
         registrationButton.interactable = true;
+    }
+    
+    private void SocketConnection()
+    {
+        var serverUrl = _globalStore.ServerProtocol + _globalStore.ServerUri;
+        var socket = Socket.Connect(serverUrl);
+        
+        socket.On(SystemEvents.connect, () => {
+            Debug.Log("Socket connected");
+            _globalStore.socket = socket;
+            _globalStore.SocketSet = true;
+            
+            _hideError();
+            _deactivateMainMenu();
+        });
+        
+        socket.On(SystemEvents.connectError, (System.Exception error) =>
+        {
+            Debug.Log("Socket connect error " + error);
+            _showError("Socket error");
+        });
+        
+        socket.On(SystemEvents.connectTimeOut, () =>
+        {
+            Debug.Log("Socket connect TimeOut");
+            _showError("Socket error");
+        });
+    }
+    
+    private void _deactivateMainMenu()
+    {
+        _globalStore.IsMainScreen = true;
+        _globalStore.IsMenuMode = false;
+        MainMenuUI.SetActive(false);
     }
 
     private void _showError(string error)

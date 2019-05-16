@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using socket.io;
 using UnityEngine;
 
 public class GlobalStore : MonoBehaviour
 {
     public string ServerProtocol { get; private set; }
     public string ServerUri { get; private set; }
+    public Socket socket;
     public bool GpsOn { get; set; }
+    public bool SocketSet { get; set; }
     
     public bool IsMainScreen { get; set; }
     public bool IsMenuMode { get; set; }
@@ -20,6 +21,7 @@ public class GlobalStore : MonoBehaviour
         IsMainScreen = false;
         IsMenuMode = true;
         GpsOn = true;
+        SocketSet = false;
     }
 
     // Update is called once per frame

@@ -8602,6 +8602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e764b27abb8fa124bbf30c829a58a8e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socket: {fileID: 0}
 --- !u!4 &1667101439
 Transform:
   m_ObjectHideFlags: 0
