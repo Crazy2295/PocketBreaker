@@ -358,7 +358,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &20094132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3996,6 +3996,95 @@ Transform:
   m_Father: {fileID: 866924772}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &655403084
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1000012497305646, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_Name
+      value: EvilArmor_E_SKEL
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000012497305646, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011686709638, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011686709638, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011686709638, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011686709638, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011686709638, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011686709638, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011686709638, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011686709638, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011686709638, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011686709638, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011686709638, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 95000013856110340, guid: 4a443c5d8b0dc99429ba71bd36718e28,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 95000013856110340, guid: 4a443c5d8b0dc99429ba71bd36718e28,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 34b87e117ca1b0d4b973c2804a46a31d, type: 2}
+    - target: {fileID: 64000011557791214, guid: 4a443c5d8b0dc99429ba71bd36718e28,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000010360744656, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 137000011191045986, guid: 4a443c5d8b0dc99429ba71bd36718e28,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000013754742568, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
 --- !u!1 &660526420
 GameObject:
   m_ObjectHideFlags: 0
