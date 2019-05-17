@@ -12,7 +12,9 @@ public class MapHelper : MonoBehaviour
     public Transform myMap;
     public Renderer mapRender;
     public Transform player;
+    public GameObject playerModelObject;
 
+    private Animator _playerAnimator;
     private Vector2 _playerPosition =
         new Vector2(47.240557f, 38.883231f); //Latitude, Longitude
 
@@ -37,6 +39,8 @@ public class MapHelper : MonoBehaviour
     
     void Start()
     {
+        _playerAnimator = playerModelObject.GetComponent<Animator>();
+        
         if (Input.location.status == LocationServiceStatus.Running)
         {
             LocationInfo loc = Input.location.lastData;
@@ -165,7 +169,14 @@ public class MapHelper : MonoBehaviour
     void Update()
     {
         if (player.position != _positionForLerp)
+        {
+            _playerAnimator.SetBool("IsWalking", true);
             player.position = Vector3.Lerp(player.position, _positionForLerp, 0.15f);
+        }
+        else
+        {
+            _playerAnimator.SetBool("IsWalking", false);
+        }
     }
 
     /// <summary>
