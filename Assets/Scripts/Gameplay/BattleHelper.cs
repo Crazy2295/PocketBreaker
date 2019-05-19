@@ -55,14 +55,14 @@ public class BattleHelper : MonoBehaviour
         Color color;
         if (_globalStore.IsAugmented)
         {
-            color = new Color(oldColor.r, oldColor.g, oldColor.b, 0.5f);
+            color = new Color(oldColor.r, oldColor.g, oldColor.b, 1f);
             battleground.SetActive(false);
             arBackground.SetActive(true);
             arBackground.AddComponent<DeviceCameraRenderer>();
         }
         else
         {
-            color = new Color(oldColor.r, oldColor.g, oldColor.b, 1f);
+            color = new Color(oldColor.r, oldColor.g, oldColor.b, 0.5f);
             battleground.SetActive(true);
             if (arBackground.GetComponent<DeviceCameraRenderer>() != null)
                 Destroy(arBackground.GetComponent<DeviceCameraRenderer>());
