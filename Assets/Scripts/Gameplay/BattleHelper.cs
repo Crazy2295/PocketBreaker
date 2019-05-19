@@ -6,8 +6,6 @@ using static UnityEngine.GameObject;
 
 public class BattleHelper : MonoBehaviour
 {
-    const float Scale = 2;
-
     public GameObject[] BattleUnitPrefab;
     public GameObject[] AttackUnitPrefab;
 
@@ -55,7 +53,6 @@ public class BattleHelper : MonoBehaviour
         }
         GameObject player = Instantiate(BattleUnitPrefab[(int)_playerHelper.MyUnitModel.UnitType]);
         player.transform.SetParent(PlayerBattlePosition, false);
-        player.transform.localScale = new Vector3(Scale / 3, Scale / 3, Scale / 3);
 
         PlayerBattleHelper = player.GetComponent<BattleUnitHelper>();
         PlayerBattleHelper.Load(_playerHelper.MyUnitModel);

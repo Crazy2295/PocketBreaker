@@ -6,6 +6,7 @@ using System.Text;
 
 public enum UnitsEnum
 {
-    testWarrior,
-    knight
+    DemonBladeLord,
+    EvilArmorII_Red,
+    EvilArmorI_Gray
 }
