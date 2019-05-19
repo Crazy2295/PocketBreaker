@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using static UnityEngine.GameObject;
 
@@ -16,6 +18,9 @@ public class BattleHelper : MonoBehaviour
 
     public Transform PlayerBattlePosition;
     public Transform EnemyBattlePosition;
+
+    [FormerlySerializedAs("playerModel")] public Animator playerAnimator;
+    [FormerlySerializedAs("enemyModel")] public Animator enemyAnimator;
 
     #region UI
     public Text PlayerName;
@@ -71,17 +76,19 @@ public class BattleHelper : MonoBehaviour
         
         BattleVissibility(IsBattle);
         ConfigureAR();
-        GameObject player = Instantiate(BattleUnitPrefab[(int)_playerHelper.MyUnitModel.UnitType]);
-        player.transform.SetParent(PlayerBattlePosition, false);
+        playerAnimator = Instantiate(BattleUnitPrefab[(int)_playerHelper.MyUnitModel.UnitType])
+            .GetComponent<Animator>();
+        playerAnimator.transform.SetParent(PlayerBattlePosition, false);
 
-        PlayerBattleHelper = player.GetComponent<BattleUnitHelper>();
+        PlayerBattleHelper = playerAnimator.GetComponent<BattleUnitHelper>();
         PlayerBattleHelper.Load(_playerHelper.MyUnitModel);
 
-        GameObject enemy = Instantiate(BattleUnitPrefab[(int)myUnitModel.UnitType]);
-        enemy.transform.SetParent(EnemyBattlePosition, false);
+        enemyAnimator = Instantiate(BattleUnitPrefab[(int)myUnitModel.UnitType])
+            .GetComponent<Animator>();
+        enemyAnimator.transform.SetParent(EnemyBattlePosition, false);
         //enemy.transform.localScale = new Vector3(Scale, Scale, Scale);
 
-        EnemyBattleHelper = enemy.GetComponent<BattleUnitHelper>();
+        EnemyBattleHelper = enemyAnimator.GetComponent<BattleUnitHelper>();
         EnemyBattleHelper.Load(myUnitModel);
 
         UpdateUI();
@@ -118,6 +125,53 @@ public class BattleHelper : MonoBehaviour
         }
     }
 
+    public void DoDamage()
+    {
+        EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyUnitModel.Damage);
+        UpdateUI();
+        
+        if (EnemyBattleHelper.IsDead)
+        {
+            _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
+            IsBattle = false;
+            Destroy(EnemyBattleHelper.gameObject);
+            StartCoroutine(CloseBattle());
+        }
+    }
+
+    public IEnumerator Delay(float seconds, Action func)
+    {
+        yield return new WaitForSeconds(seconds);
+        func();
+    }
+
+    public void Attack()
+    {
+        playerAnimator.Play("Attack01", 0);
+        StartCoroutine(
+            Delay(0.5f, () => enemyAnimator.Play("FallenAngle_Damage", 0))
+        );
+        DoDamage();
+    }
+
+    public void Maneuver()
+    {
+        playerAnimator.Play("Attack02", 0);
+        StartCoroutine(
+            Delay(1f, () => enemyAnimator.Play("FallenAngle_Damage", 0))
+        );
+        DoDamage();
+    }
+
+    public void Parry()
+    {
+        playerAnimator.Play("Attack03", 0);
+        StartCoroutine(
+            Delay(2f, () => enemyAnimator.Play("FallenAngle_Damage", 0))
+        );
+        DoDamage();
+    }
+
     public void FightSpellButton()
     {
         if (!IsBattle)
@@ -135,6 +189,7 @@ public class BattleHelper : MonoBehaviour
 
         if (EnemyBattleHelper.IsDead)
         {
+            enemyAnimator.Play("FallenAngle_Death", 0);
             _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
             IsBattle = false;
             Destroy(EnemyBattleHelper.gameObject);

@@ -967,7 +967,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1231370327}
-        m_MethodName: FightSpellButton
+        m_MethodName: Attack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5279,6 +5279,8 @@ MonoBehaviour:
   BattleUI: {fileID: 621460389}
   PlayerBattlePosition: {fileID: 1620703334}
   EnemyBattlePosition: {fileID: 1751118691}
+  playerAnimator: {fileID: 623427405}
+  enemyAnimator: {fileID: 0}
   PlayerName: {fileID: 0}
   PlayerHealth: {fileID: 607233358}
   EnemyName: {fileID: 74830902}
@@ -6872,8 +6874,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: UltimateSpellButton
+      - m_Target: {fileID: 1231370327}
+        m_MethodName: Parry
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8121,8 +8123,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: UltimateSpellButton
+      - m_Target: {fileID: 1231370327}
+        m_MethodName: Maneuver
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
