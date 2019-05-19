@@ -11,8 +11,16 @@ public class GlobalStore : MonoBehaviour
     
     public bool IsMainScreen { get; set; }
     public bool IsMenuMode { get; set; }
-    public bool IsAugmented { get; set; }
-    
+
+    public bool IsAugmented
+    {
+        get { return PlayerPrefs.GetInt("IsAugmented") == 1; }
+        set
+        {
+            PlayerPrefs.SetInt("IsAugmented", value ? 1 : 0);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,7 +30,6 @@ public class GlobalStore : MonoBehaviour
         IsMainScreen = false;
         IsMenuMode = true;
         GpsOn = true;
-        IsAugmented = true;
         SocketSet = false;
     }
 

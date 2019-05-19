@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MapUnitTouch : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class MapUnitTouch : MonoBehaviour
     }
 
     void OnMouseDown() {
-        FindObjectOfType<BattleHelper>().StartBattle(unitHelper.MyUnitModel);
+        if (!EventSystem.current.IsPointerOverGameObject())
+            FindObjectOfType<BattleHelper>().StartBattle(unitHelper.MyUnitModel);
     }
 }

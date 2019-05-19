@@ -41,16 +41,36 @@ public class BattleHelper : MonoBehaviour
         //InvokeRepeating("EnemyAttack", AttackSpeed, AttackSpeed);
     }
 
+    private void ConfigureAR()
+    {
+        var battleground = gameObject.FindObject("BattleGround");
+        var arBackground = gameObject.FindObject("ARBackground");
+        var arButton = Find("ArButton").GetComponent<Button>();
+        var oldColor = arButton.image.color;
+        Color color;
+        if (_globalStore.IsAugmented)
+        {
+            color = new Color(oldColor.r, oldColor.g, oldColor.b, 0.5f);
+            battleground.SetActive(false);
+            arBackground.SetActive(true);
+            arBackground.AddComponent<DeviceCameraRenderer>();
+        }
+        else
+        {
+            color = new Color(oldColor.r, oldColor.g, oldColor.b, 1f);
+            battleground.SetActive(true);
+            if (arBackground.GetComponent<DeviceCameraRenderer>() != null)
+                Destroy(arBackground.GetComponent<DeviceCameraRenderer>());
+            arBackground.SetActive(false);
+        }
+        arButton.image.color = color;
+    }
     public void StartBattle(UnitModel myUnitModel)
     {
         IsBattle = true;
-       
+        
         BattleVissibility(IsBattle);
-        if (_globalStore.IsAugmented)
-        {
-            Find("BattleGround").SetActive(false);
-            Find("ARBackground").AddComponent<DeviceCameraRenderer>();
-        }
+        ConfigureAR();
         GameObject player = Instantiate(BattleUnitPrefab[(int)_playerHelper.MyUnitModel.UnitType]);
         player.transform.SetParent(PlayerBattlePosition, false);
 
@@ -130,7 +150,9 @@ public class BattleHelper : MonoBehaviour
 
     private IEnumerator CloseBattle()
     {
-        Destroy(Find("ARBackground").GetComponent<DeviceCameraRenderer>());
+        var arBackground = gameObject.FindObject("ARBackground");
+        if (arBackground.GetComponent<DeviceCameraRenderer>() != null)
+            Destroy(arBackground.GetComponent<DeviceCameraRenderer>());
         yield return new WaitForSeconds(2);
         EndBattle();
     }
@@ -142,6 +164,12 @@ public class BattleHelper : MonoBehaviour
         BattleVissibility(IsBattle);
     }
 
+    public void SetAR()
+    {
+        _globalStore.IsAugmented = !_globalStore.IsAugmented;
+        ConfigureAR();
+    }
+    
     void Update()
     {
         
