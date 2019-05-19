@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GameObject;
 
 public class BattleHelper : MonoBehaviour
 {
@@ -30,20 +31,26 @@ public class BattleHelper : MonoBehaviour
 
     PlayerHelper _playerHelper;
     LoadUnitData _loadUnitData;
-
+    GlobalStore _globalStore;
+    
     void Start()
     {
-        _playerHelper = GameObject.FindObjectOfType<PlayerHelper>();
-        _loadUnitData = GameObject.FindObjectOfType<LoadUnitData>();
-
+        _playerHelper = FindObjectOfType<PlayerHelper>();
+        _loadUnitData = FindObjectOfType<LoadUnitData>();
+        _globalStore = FindObjectOfType<GlobalStore>();
         //InvokeRepeating("EnemyAttack", AttackSpeed, AttackSpeed);
     }
 
     public void StartBattle(UnitModel myUnitModel)
     {
         IsBattle = true;
+       
         BattleVissibility(IsBattle);
-
+        if (_globalStore.IsAugmented)
+        {
+            Find("BattleGround").SetActive(false);
+            Find("ARBackground").AddComponent<DeviceCameraRenderer>();
+        }
         GameObject player = Instantiate(BattleUnitPrefab[(int)_playerHelper.MyUnitModel.UnitType]);
         player.transform.SetParent(PlayerBattlePosition, false);
 
@@ -123,12 +130,14 @@ public class BattleHelper : MonoBehaviour
 
     private IEnumerator CloseBattle()
     {
+        Destroy(Find("ARBackground").GetComponent<DeviceCameraRenderer>());
         yield return new WaitForSeconds(2);
         EndBattle();
     }
 
     public void EndBattle()
     {
+        
         IsBattle = false;
         BattleVissibility(IsBattle);
     }
