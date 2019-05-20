@@ -94,6 +94,21 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 6350032565904751890, guid: 62d77a0db127ec24b902bc0d49672826,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 8a749750a5119e046bd5d5c435e62be8, type: 2}
+    - target: {fileID: 6431927236966863836, guid: 62d77a0db127ec24b902bc0d49672826,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.033246677
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431927236966863836, guid: 62d77a0db127ec24b902bc0d49672826,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.1465091
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7982892017756302613, guid: 62d77a0db127ec24b902bc0d49672826, type: 3}
     - {fileID: 8861158218463898778, guid: 62d77a0db127ec24b902bc0d49672826, type: 3}

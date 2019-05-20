@@ -79,6 +79,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 95000013856110340, guid: 4a443c5d8b0dc99429ba71bd36718e28,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6bab67aa6e7e3d0458e5d32330b7e5a4, type: 2}
     m_RemovedComponents:
     - {fileID: 4179392706556972284, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}
     - {fileID: 4610371464420781439, guid: 4a443c5d8b0dc99429ba71bd36718e28, type: 3}

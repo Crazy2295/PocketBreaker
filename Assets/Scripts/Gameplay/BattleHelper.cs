@@ -127,12 +127,13 @@ public class BattleHelper : MonoBehaviour
 
     public void DoDamage()
     {
+        enemyAnimator.SetTrigger("Hit");
         EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyUnitModel.Damage);
         UpdateUI();
         
         if (EnemyBattleHelper.IsDead)
         {
-            enemyAnimator.Play("FallenAngle_Death", 0);
+            enemyAnimator.SetTrigger("Death");
             StartCoroutine(Delay(
                 enemyAnimator.GetDurationOfClip("FallenAngle_Death"),
                 () =>
@@ -154,28 +155,19 @@ public class BattleHelper : MonoBehaviour
 
     public void Attack()
     {
-        playerAnimator.Play("Attack01", 0);
-        StartCoroutine(
-            Delay(0.5f, () => enemyAnimator.Play("FallenAngle_Damage", 0))
-        );
+        playerAnimator.SetTrigger("Attack1");
         DoDamage();
     }
 
     public void Maneuver()
     {
-        playerAnimator.Play("Attack02", 0);
-        StartCoroutine(
-            Delay(1f, () => enemyAnimator.Play("FallenAngle_Damage", 0))
-        );
+        playerAnimator.SetTrigger("Attack2");
         DoDamage();
     }
 
     public void Parry()
     {
-        playerAnimator.Play("Attack03", 0);
-        StartCoroutine(
-            Delay(2f, () => enemyAnimator.Play("FallenAngle_Damage", 0))
-        );
+        playerAnimator.SetTrigger("Attack3");
         DoDamage();
     }
 
