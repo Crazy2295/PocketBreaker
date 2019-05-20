@@ -132,10 +132,17 @@ public class BattleHelper : MonoBehaviour
         
         if (EnemyBattleHelper.IsDead)
         {
-            _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
-            IsBattle = false;
-            Destroy(EnemyBattleHelper.gameObject);
-            StartCoroutine(CloseBattle());
+            enemyAnimator.Play("FallenAngle_Death", 0);
+            StartCoroutine(Delay(
+                enemyAnimator.GetDurationOfClip("FallenAngle_Death"),
+                () =>
+                {
+                    _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
+                    IsBattle = false;
+                    Destroy(EnemyBattleHelper.gameObject);
+                    StartCoroutine(CloseBattle());
+                }
+            ));
         }
     }
 
@@ -190,10 +197,16 @@ public class BattleHelper : MonoBehaviour
         if (EnemyBattleHelper.IsDead)
         {
             enemyAnimator.Play("FallenAngle_Death", 0);
-            _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
-            IsBattle = false;
-            Destroy(EnemyBattleHelper.gameObject);
-            StartCoroutine(CloseBattle());
+            StartCoroutine(Delay(
+                enemyAnimator.GetDurationOfClip("FallenAngle_Death"),
+                () =>
+                {
+                    _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
+                    IsBattle = false;
+                    Destroy(EnemyBattleHelper.gameObject);
+                    StartCoroutine(CloseBattle());
+                }
+            ));
         }
     }
 
