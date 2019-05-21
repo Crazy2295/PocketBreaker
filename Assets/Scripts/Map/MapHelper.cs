@@ -15,8 +15,6 @@ public class MapHelper : MonoBehaviour
     public GameObject playerModelObject;
 
     private Animator _playerAnimator;
-    private Vector2 _playerPosition =
-        new Vector2(47.206657f, 38.929186f); //Latitude, Longitude
 
     private Vector3 _iniRef;
 
@@ -37,7 +35,7 @@ public class MapHelper : MonoBehaviour
         _globalStore = GameObject.FindObjectOfType<GlobalStore>();
     }
     
-    void Start()
+    private IEnumerator Start()
     {
         _playerAnimator = playerModelObject.GetComponent<Animator>();
         
@@ -45,14 +43,18 @@ public class MapHelper : MonoBehaviour
         {
             LocationInfo loc = Input.location.lastData;
 
-            _playerPosition.x = loc.latitude;
-            _playerPosition.y = loc.longitude;
+            _globalStore.PlayerPosition = new Vector2(loc.latitude, loc.longitude);
         }
 
+        while (!_globalStore.GpsOn)
+        {
+            yield return null;
+        }
+        
         //Set Position
-        _iniRef = PositionHelper(_playerPosition);
+        _iniRef = PositionHelper(_globalStore.PlayerPosition);
 
-        LoadMap(_playerPosition);
+        LoadMap(_globalStore.PlayerPosition);
 
         InvokeRepeating("UpdateMyPosition", 1, 0.5f);
         InvokeRepeating("UpdateMap", 1, 3f);
@@ -64,7 +66,7 @@ public class MapHelper : MonoBehaviour
     void UpdateMap()
     {
         if (_globalStore.GpsOn && _mapLoaded && UpdatedPosition)
-            LoadMap(_playerPosition);
+            LoadMap(_globalStore.PlayerPosition);
     }
 
     private const float DistanceMapUpdate = 2;
@@ -77,13 +79,12 @@ public class MapHelper : MonoBehaviour
         {
             LocationInfo loc = Input.location.lastData;
 
-            _playerPosition.x = loc.latitude;
-            _playerPosition.y = loc.longitude;
+            _globalStore.PlayerPosition = new Vector2(loc.latitude, loc.longitude);
 
             if (Vector3.Distance(_lastMapCenter, player.position) > DistanceMapUpdate)
                 UpdatedPosition = true;
 
-            _positionForLerp = PositionHelper(_playerPosition, _iniRef);
+            _positionForLerp = PositionHelper(_globalStore.PlayerPosition, _iniRef);
         }
     }
 
@@ -96,15 +97,15 @@ public class MapHelper : MonoBehaviour
     {
         _mapLoaded = false;
         _url = "https://maps.googleapis.com/maps/api/staticmap?center=" +
-              _playerPosition.x.ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture) +
-              "," + _playerPosition.y.ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture) +
+               _globalStore.PlayerPosition.x.ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture) +
+              "," + _globalStore.PlayerPosition.y.ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture) +
               "&zoom=" + Zoom + "&size=" + MapSize + "x" + MapSize + "&scale=" + MapScale + "&language=ru" +
               "&type=" + MapType +
               "&style=feature:all|element:labels|visibility:off&style=feature:landscape.man_made%7Celement:geometry%7Cvisibility:off" +
               "&style=feature:road%7Ccolor:0xacaca4&style=feature:road.local%7Ccolor:0x9b7653&style=feature:poi%7Cvisibility:off" +
               "&style=feature:landscape.natural%7Celement:geometry%7Ccolor:0x008000&style=feature:water%7Ccolor:0x003F87" +
               "&style=feature:transit%7Cvisibility:off" + "&key=" + Key;
-
+        
         _lastMapCenter = player.position;
         UpdatedPosition = false;
 
@@ -151,7 +152,7 @@ public class MapHelper : MonoBehaviour
     /// </summary>
     void ReSet()
     {
-        transform.position = PositionHelper(_playerPosition, _iniRef);
+        transform.position = PositionHelper(_globalStore.PlayerPosition, _iniRef);
     }
 
     /// <summary>

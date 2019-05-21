@@ -4,13 +4,20 @@ using System.Collections;
 public class PlayerHelper : MonoBehaviour {
 
     public UnitModel MyUnitModel { get; set; }
-    // Use this for initialization
+
+    private LoadUnitData _loadUnitData;
+
+    private void Awake()
+    {
+	    _loadUnitData = GameObject.FindObjectOfType<LoadUnitData>();
+    }
+
     void Start () {
         MyUnitModel = new UnitModel()
         {
-            UnitType = UnitsEnum.DemonBladeLord,
-            Health = 200,
-            Damage = 10
+	        UnitPrefabId = 0,
+            Hp = 200,
+            AdditionalDamage = 10
         };
     }
 	

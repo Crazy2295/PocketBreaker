@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public class MapUnitTouch : MonoBehaviour
 {
-    public UnitHelper unitHelper;
+    public UnitModel unitModel;
 
     private void Start()
     {
@@ -12,6 +12,6 @@ public class MapUnitTouch : MonoBehaviour
 
     void OnMouseDown() {
         if (!EventSystem.current.IsPointerOverGameObject())
-            FindObjectOfType<BattleHelper>().StartBattle(unitHelper.MyUnitModel);
+            FindObjectOfType<BattleHelper>().StartBattle(unitModel);
     }
 }

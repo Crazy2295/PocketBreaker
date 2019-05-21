@@ -316,13 +316,13 @@ namespace socket.io {
                         return;
                     }
 
-                    var seperateIndex = pkt.body.IndexOf(", ");
-
-                    var seperatorLen = 2;
-                    if (seperateIndex == -1) {
-                        seperateIndex = pkt.body.IndexOf(',');
-                        seperatorLen = 1;
-                    }
+//                    var seperateIndex = pkt.body.IndexOf(", ");
+//
+//                    var seperatorLen = 2;
+//                    if (seperateIndex == -1) {
+                    var seperateIndex = pkt.body.IndexOf(',');
+                    var seperatorLen = 1;
+//                    }
 
                     var eventName = pkt.body.Substring(2, seperateIndex - 3);
                     if (!_handlers.ContainsKey(eventName)) {

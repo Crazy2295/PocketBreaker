@@ -28,9 +28,10 @@ public class BattleUnitHelper : MonoBehaviour
     {
         MyUnitModel = myUnitModel;
 
-        MaxHealth = MyUnitModel.Health;
-        Health = MyUnitModel.Health;
-        Name = myUnitModel.UnitType.ToString();
+        MaxHealth = MyUnitModel.Hp;
+        Health = MyUnitModel.Hp;
+//        Name = myUnitModel.UnitType.ToString();
+        Name = "myUnitModel";
     }
 
     internal void TakeDamage(int damage)
