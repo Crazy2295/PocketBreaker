@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -73,7 +73,6 @@ public class BattleHelper : MonoBehaviour
     public void StartBattle(UnitModel myUnitModel)
     {
         IsBattle = true;
-        
         BattleVissibility(IsBattle);
         ConfigureAR();
         playerAnimator = Instantiate(BattleUnitPrefab[_playerHelper.MyUnitModel.UnitPrefabId]).GetComponent<Animator>();
@@ -82,7 +81,7 @@ public class BattleHelper : MonoBehaviour
         PlayerBattleHelper = playerAnimator.GetComponent<BattleUnitHelper>();
         PlayerBattleHelper.Load(_playerHelper.MyUnitModel);
 
-        enemyAnimator = Instantiate(BattleUnitPrefab[myUnitModel.UnitPrefabId]).GetComponent<Animator>();
+        enemyAnimator = Instantiate(BattleUnitPrefab[myUnitModel.UnitPrefabId-1]).GetComponent<Animator>();
         enemyAnimator.transform.SetParent(EnemyBattlePosition, false);
 
         EnemyBattleHelper = enemyAnimator.GetComponent<BattleUnitHelper>();

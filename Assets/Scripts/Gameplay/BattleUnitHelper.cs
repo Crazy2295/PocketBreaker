@@ -31,7 +31,7 @@ public class BattleUnitHelper : MonoBehaviour
         MaxHealth = MyUnitModel.Hp;
         Health = MyUnitModel.Hp;
 //        Name = myUnitModel.UnitType.ToString();
-        Name = "myUnitModel";
+        Name = "AI";
     }
 
     internal void TakeDamage(int damage)
