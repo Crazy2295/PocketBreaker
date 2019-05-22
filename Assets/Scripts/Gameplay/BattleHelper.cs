@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -73,20 +73,16 @@ public class BattleHelper : MonoBehaviour
     public void StartBattle(UnitModel myUnitModel)
     {
         IsBattle = true;
-        
         BattleVissibility(IsBattle);
         ConfigureAR();
-        playerAnimator = Instantiate(BattleUnitPrefab[(int)_playerHelper.MyUnitModel.UnitType])
-            .GetComponent<Animator>();
+        playerAnimator = Instantiate(BattleUnitPrefab[_playerHelper.MyUnitModel.UnitPrefabId]).GetComponent<Animator>();
         playerAnimator.transform.SetParent(PlayerBattlePosition, false);
 
         PlayerBattleHelper = playerAnimator.GetComponent<BattleUnitHelper>();
         PlayerBattleHelper.Load(_playerHelper.MyUnitModel);
 
-        enemyAnimator = Instantiate(BattleUnitPrefab[(int)myUnitModel.UnitType])
-            .GetComponent<Animator>();
+        enemyAnimator = Instantiate(BattleUnitPrefab[myUnitModel.UnitPrefabId-1]).GetComponent<Animator>();
         enemyAnimator.transform.SetParent(EnemyBattlePosition, false);
-        //enemy.transform.localScale = new Vector3(Scale, Scale, Scale);
 
         EnemyBattleHelper = enemyAnimator.GetComponent<BattleUnitHelper>();
         EnemyBattleHelper.Load(myUnitModel);
@@ -100,7 +96,7 @@ public class BattleHelper : MonoBehaviour
         EnemyHealth.maxValue = EnemyBattleHelper.MaxHealth;
         EnemyHealth.value = EnemyBattleHelper.Health;
 
-        //PlayerUnitName.text = PlayerBattleHelper.Name;
+//        PlayerUnitName.text = PlayerBattleHelper.Name;
         PlayerHealth.maxValue = PlayerBattleHelper.MaxHealth;
         PlayerHealth.value = PlayerBattleHelper.Health;
     }
@@ -110,10 +106,10 @@ public class BattleHelper : MonoBehaviour
         if (!IsBattle)
             return;
 
-        PlayerBattleHelper.TakeDamage(EnemyBattleHelper.MyUnitModel.Damage);
+        PlayerBattleHelper.TakeDamage(EnemyBattleHelper.MyUnitModel.AdditionalDamage);
         UpdateUI();
 
-        GameObject effect = Instantiate(AttackUnitPrefab[(int)EnemyBattleHelper.MyUnitModel.UnitType]);
+        GameObject effect = Instantiate(AttackUnitPrefab[EnemyBattleHelper.MyUnitModel.UnitPrefabId]);
         effect.transform.position = PlayerBattleHelper.transform.position;
         Destroy(effect, 1);
 
@@ -128,7 +124,7 @@ public class BattleHelper : MonoBehaviour
     public void DoDamage()
     {
         enemyAnimator.SetTrigger("Hit");
-        EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyUnitModel.Damage);
+        EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyUnitModel.AdditionalDamage);
         UpdateUI();
         
         if (EnemyBattleHelper.IsDead)
@@ -138,9 +134,9 @@ public class BattleHelper : MonoBehaviour
                 enemyAnimator.GetDurationOfClip("FallenAngle_Death"),
                 () =>
                 {
-                    _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
+//                    _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
                     IsBattle = false;
-                    Destroy(EnemyBattleHelper.gameObject);
+//                    Destroy(EnemyBattleHelper.gameObject);
                     StartCoroutine(CloseBattle());
                 }
             ));
@@ -176,11 +172,10 @@ public class BattleHelper : MonoBehaviour
         if (!IsBattle)
             return;
 
-        EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyUnitModel.Damage);
+        EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyUnitModel.AdditionalDamage);
         UpdateUI();
 
-        //GameObject effect = Instantiate(AttackUnitPrefab[(int)PlayerBattleHelper.MyUnitModel.UnitType]);
-        GameObject effect = Instantiate(AttackUnitPrefab[(int)0]);
+        GameObject effect = Instantiate(AttackUnitPrefab[PlayerBattleHelper.MyUnitModel.UnitPrefabId]);
         Vector3 effectPos = EnemyBattleHelper.transform.position;
         effectPos.y += 0.5f;
         effect.transform.position = effectPos;
@@ -213,7 +208,7 @@ public class BattleHelper : MonoBehaviour
         IsBattle = false;
         BattleVissibility(IsBattle);
 
-        _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
+//        _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
         Destroy(EnemyBattleHelper.gameObject);
     }
 

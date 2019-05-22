@@ -116,18 +116,25 @@ public class LoginForm : MonoBehaviour
         else
         {
             Debug.Log("Received: " + uwr.downloadHandler.text);
-
+        
             PlayerForJson forJson = JsonUtility.FromJson<PlayerForJson>(uwr.downloadHandler.text);
 
-            _playerModel.name = forJson.name;
+            _playerModel.Name = forJson.name;
             _playerModel.Gender = forJson.gender;
-            
+            UserData.FromModel = _playerModel;
+            _setPlayerName(_playerModel.Name);
             _hideError();
             
             SocketConnection();
         }
     }
 
+    private static void _setPlayerName(string name)
+    {
+        var canvas = GameObject.Find("Canvas");
+        var playerName = canvas.FindObject("PlayerPanel").FindObject("Name").GetComponent<Text>();
+        playerName.text = name;
+    }
     private void SocketConnection()
     {
         var serverUrl = _globalStore.ServerProtocol + _globalStore.ServerUri;

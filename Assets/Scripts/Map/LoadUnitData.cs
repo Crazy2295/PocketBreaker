@@ -2,104 +2,48 @@
 using System.Collections;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Units;
 
 public class LoadUnitData : MonoBehaviour
 {
-    public GameObject[] UnitPrefabs;
-
-    string _xml = "";
-
-    public List<UnitModel> UnitModels { get; set; }
-    public List<UnitHelper> Units { get; set; }
+    public GameObject allUnits;
+    public GameObject[] unitPrefabs;
+    public List<UnitModel> Units { get; set; }
 
     private GlobalStore _globalStore;
-    IEnumerator Start()
-    {
-        UnitModels = new List<UnitModel>();
-        Units = new List<UnitHelper>();
-        _globalStore = GameObject.FindObjectOfType<GlobalStore>();
 
+    private void Awake()
+    {
+        _globalStore = GameObject.FindObjectOfType<GlobalStore>();
+        Units = new List<UnitModel>();
+    }
+
+    private IEnumerator Start()
+    {
         while (!_globalStore.GpsOn)
         {
-            Debug.Log("Wait!");
             yield return null;
         }
 
-        var www = new WWW("https://drive.google.com/uc?authuser=0&id=1xeJ8hw-xwhK_6s0E0sbCfkWB0cMgrUDO&export=download");
-        while (!www.isDone)
+
+        var pp = new PlayerPosition {Lat = _globalStore.PlayerPosition.x, Lon = _globalStore.PlayerPosition.y};
+        _globalStore.socket.EmitJson("units_get_for_map", JsonConvert.SerializeObject(pp));
+
+        _globalStore.socket.On("units_get_for_map", (string data) =>
         {
-            yield return null;
-        }
-
-        Debug.Log(www.text);
-        _xml = www.text;
-
-
-        XDocument doc = XDocument.Parse(_xml);
-        XElement element = doc.Element("units");
-        IEnumerable<XElement> elements = element.Elements();
-
-        foreach (XElement item in elements)
-        {
-            UnitModel unitModel = new UnitModel();
-            int unitTypeInt = System.Convert.ToInt32(item.Attribute("type").Value);
-            unitModel.UnitType = (UnitsEnum)unitTypeInt;
-
-            unitModel.Id = System.Convert.ToInt32(item.Attribute("id").Value);
-
-            unitModel.Lat = float.Parse(item.Attribute("lat").Value, System.Globalization.CultureInfo.InvariantCulture);
-            unitModel.Lon = float.Parse(item.Attribute("lon").Value, System.Globalization.CultureInfo.InvariantCulture);
-            unitModel.Orint = System.Convert.ToSingle(item.Attribute("orint").Value);
-
-            unitModel.Exp = System.Convert.ToInt32(item.Attribute("exp").Value);
-            unitModel.Damage = System.Convert.ToInt32(item.Attribute("damage").Value);
-            unitModel.Health = System.Convert.ToInt32(item.Attribute("health").Value);
-
-            UnitModels.Add(unitModel);
-        }
-
-        Debug.Log("UnitModels.Count = " + UnitModels.Count);
-
-
-        for (int i = 0; i < UnitModels.Count; i++)
-        {
-            var item = UnitModels[i];
-
-            var unit = Instantiate(UnitPrefabs[(int)item.UnitType]);
-            unit.AddComponent<CapsuleCollider>();
-            var setGeolocation = unit.GetComponent<SetGeolocation>();
-            setGeolocation.SetLocation(item.Lat, item.Lon, item.Orint);
-            
-            var unitHelper = unit.GetComponent<UnitHelper>();
-            unitHelper.LoadUnit(item);
-
-            var touch = unit.AddComponent<MapUnitTouch>();
-            touch.unitHelper = unitHelper;
-            
-            Units.Add(unitHelper);
-        }
-
-
+            Units = JsonConvert.DeserializeObject<List<UnitModel>>((string) data);
+            foreach (var unit in Units)
+            {
+                unit.UnitPrefab = Instantiate(unitPrefabs[unit.UnitPrefabId - 1], allUnits.transform, false);
+                unit.UnitPrefab.GetComponent<SetGeolocation>().SetLocation(unit.Lat, unit.Lon);
+                unit.UnitPrefab.AddComponent<MapUnitTouch>().unitModel = unit;
+            }
+        });
     }
 
     // Update is called once per frame
     void Update()
     {
-      
-    }
-
-    internal void DestroyUnit(UnitModel myUnitModel)
-    {
-        UnitHelper remove = null;
-        foreach (var item in Units)
-        {
-            if (item.MyUnitModel.Id == myUnitModel.Id)
-            {
-                remove = item;
-            }
-        }
-
-        Destroy(remove.gameObject);
-        Units.Remove(remove);
     }
 }

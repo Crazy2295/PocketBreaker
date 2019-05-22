@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GlobalStore : MonoBehaviour
 {
+    public Vector2 PlayerPosition { get; set; }
     public string ServerProtocol { get; private set; }
     public string ServerUri { get; private set; }
     public Socket socket;
@@ -22,14 +23,16 @@ public class GlobalStore : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        PlayerPosition = new Vector2(47.24055f, 38.88323f);
+        
         ServerProtocol = "http://";
         ServerUri = "127.0.0.1:5000";
 
         IsMainScreen = false;
         IsMenuMode = true;
-        GpsOn = true;
+        GpsOn = false;
         SocketSet = false;
     }
 

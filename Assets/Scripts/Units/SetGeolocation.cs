@@ -51,11 +51,10 @@ public class SetGeolocation : MonoBehaviour
         transform.eulerAngles = eAngles;
     }
 
-    public void SetLocation(float latitude, float longitude, float newOrientation)
+    public void SetLocation(float latitude, float longitude)
     {
         lat = latitude;
         lon = longitude;
-        orientation = newOrientation;
         GeoLocation();
     }
 }

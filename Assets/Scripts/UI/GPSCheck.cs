@@ -21,9 +21,11 @@ public class GPSCheck : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-//        if (_globalStore.IsMenuMode) 
-//            return;
-//        
+        if (_globalStore.IsMenuMode) 
+            return;
+        
+        _globalStore.GpsOn = true;
+        
 //        if (!Input.location.isEnabledByUser ||
 //            Input.location.status == LocationServiceStatus.Stopped ||
 //            Input.location.status == LocationServiceStatus.Failed)

@@ -1673,7 +1673,6 @@ GameObject:
   - component: {fileID: 5601687221523378781}
   - component: {fileID: 5601687220992069407}
   - component: {fileID: 2799914386672333485}
-  - component: {fileID: 4254836377485184199}
   m_Layer: 0
   m_Name: EvilArmorI_Gray
   m_TagString: Untagged
@@ -1745,18 +1744,6 @@ MonoBehaviour:
   lat: 0
   lon: 0
   orientation: 0
---- !u!114 &4254836377485184199
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5601687221513978335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40d97f2d2da0beb46b6451bef8cdb994, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5601687221513978337
 GameObject:
   m_ObjectHideFlags: 0
