@@ -7,7 +7,8 @@ using Units;
 
 public class LoadUnitData : MonoBehaviour
 {
-    public GameObject[] UnitPrefabs;
+    public GameObject allUnits;
+    public GameObject[] unitPrefabs;
     public List<UnitModel> Units { get; set; }
 
     private GlobalStore _globalStore;
@@ -34,11 +35,10 @@ public class LoadUnitData : MonoBehaviour
             Units = JsonConvert.DeserializeObject<List<UnitModel>>((string) data);
             foreach (var unit in Units)
             {
-                unit.UnitPrefab = Instantiate(UnitPrefabs[unit.UnitPrefabId - 1]);
+                unit.UnitPrefab = Instantiate(unitPrefabs[unit.UnitPrefabId - 1], allUnits.transform, false);
                 unit.UnitPrefab.GetComponent<SetGeolocation>().SetLocation(unit.Lat, unit.Lon);
                 unit.UnitPrefab.AddComponent<MapUnitTouch>().unitModel = unit;
             }
-
         });
     }
 
