@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Newtonsoft.Json;
+using Units;
 using UnityEngine.Networking;
 
 public class MapHelper : MonoBehaviour
@@ -16,8 +18,8 @@ public class MapHelper : MonoBehaviour
 
     private Animator _playerAnimator;
 
+    private LoadUnitData _loadUnitData;
     private Vector3 _iniRef;
-
     public Vector3 IniRef
     {
         get { return _iniRef; }
@@ -33,6 +35,7 @@ public class MapHelper : MonoBehaviour
     void Awake()
     {
         _globalStore = GameObject.FindObjectOfType<GlobalStore>();
+        _loadUnitData = GameObject.FindObjectOfType<LoadUnitData>();
     }
     
     private IEnumerator Start()
@@ -73,7 +76,7 @@ public class MapHelper : MonoBehaviour
     private Vector2 _lastMapCenter;
     private Vector3 _positionForLerp;
 
-    void UpdateMyPosition()
+    private void UpdateMyPosition()
     {
         if (_globalStore.GpsOn && Input.location.status == LocationServiceStatus.Running)
         {
@@ -85,7 +88,15 @@ public class MapHelper : MonoBehaviour
                 UpdatedPosition = true;
 
             _positionForLerp = PositionHelper(_globalStore.PlayerPosition, _iniRef);
+
+            SendPositionToServer();
         }
+    }
+
+    private void SendPositionToServer()
+    {
+        var pp = new PlayerPosition {Lat = _globalStore.PlayerPosition.x, Lon = _globalStore.PlayerPosition.y};
+        _globalStore.socket.EmitJson("players_update_position", JsonConvert.SerializeObject(pp));
     }
 
 
@@ -109,6 +120,7 @@ public class MapHelper : MonoBehaviour
         _lastMapCenter = player.position;
         UpdatedPosition = false;
 
+        SendPositionToServer();
         StartCoroutine(LoadMap());
     }
 
@@ -130,8 +142,9 @@ public class MapHelper : MonoBehaviour
         if (wr.error == null)
         {
             Debug.Log("Map Ready!");
-            yield return new WaitForSeconds(0.5f);
-            mapRender.material.mainTexture = texDl.texture;;
+            mapRender.material.mainTexture = texDl.texture;
+            
+            _loadUnitData.GetUnits();
         }
         else
         {
