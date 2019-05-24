@@ -16,7 +16,7 @@ public class PlayerHelper : MonoBehaviour {
         MyUnitModel = new UnitModel()
         {
 	        UnitPrefabId = 0,
-            Hp = 200,
+            Hp = 100,
             AdditionalDamage = 10
         };
     }

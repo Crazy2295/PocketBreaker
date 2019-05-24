@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.XR.Interaction;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using static UnityEngine.GameObject;
@@ -37,12 +38,27 @@ public class BattleHelper : MonoBehaviour
     PlayerHelper _playerHelper;
     LoadUnitData _loadUnitData;
     GlobalStore _globalStore;
-    
+    private static readonly int _attack1 = Animator.StringToHash("Attack1");
+    private static readonly int _attack3 = Animator.StringToHash("Attack3");
+    private static readonly int _attack2 = Animator.StringToHash("Attack2");
+    private static readonly int _hit = Animator.StringToHash("Hit");
+    private static readonly int _death = Animator.StringToHash("Death");
+
     void Start()
     {
         _playerHelper = FindObjectOfType<PlayerHelper>();
         _loadUnitData = FindObjectOfType<LoadUnitData>();
         _globalStore = FindObjectOfType<GlobalStore>();
+
+        var battleHandlers = gameObject.GetComponent<BattleHandlers>();
+        battleHandlers.MoveGotResult = result =>
+        {
+            EnemyAttack(result.Enemy.Move.ActionType);
+            
+            PlayerBattleHelper.NewHp(result.Self.Model.Hp);
+            EnemyBattleHelper.NewHp(result.Enemy.Model.Hp);
+
+        };
         //InvokeRepeating("EnemyAttack", AttackSpeed, AttackSpeed);
     }
 
@@ -90,6 +106,7 @@ public class BattleHelper : MonoBehaviour
         UpdateUI();
     }
 
+
     private void UpdateUI()
     {
         EnemyName.text = EnemyBattleHelper.Name;
@@ -101,35 +118,50 @@ public class BattleHelper : MonoBehaviour
         PlayerHealth.value = PlayerBattleHelper.Health;
     }
 
-    void EnemyAttack()
+    void EnemyAttack(int attackType)
     {
-        if (!IsBattle)
-            return;
-
-        PlayerBattleHelper.TakeDamage(EnemyBattleHelper.MyUnitModel.AdditionalDamage);
-        UpdateUI();
-
-        GameObject effect = Instantiate(AttackUnitPrefab[EnemyBattleHelper.MyUnitModel.UnitPrefabId]);
-        effect.transform.position = PlayerBattleHelper.transform.position;
-        Destroy(effect, 1);
-
-        if (EnemyBattleHelper.IsDead)
+        int trigger;
+        switch (attackType)
         {
-            IsBattle = false;
-            Destroy(PlayerBattleHelper.gameObject);
-            StartCoroutine(CloseBattle());
+            case 0: trigger = _attack1;
+                break;
+            case 1: trigger = _attack2;
+                break;
+            case 2: trigger = _attack3;
+                break;
+            default:
+                throw new ArgumentException("Unknown attack type");
         }
+        enemyAnimator.SetTrigger(trigger);
+        DoDamage(true);
+//        if (!IsBattle)
+//            return;
+//
+//        PlayerBattleHelper.TakeDamage(EnemyBattleHelper.MyUnitModel.AdditionalDamage);
+//        UpdateUI();
+//
+//        GameObject effect = Instantiate(AttackUnitPrefab[EnemyBattleHelper.MyUnitModel.UnitPrefabId]);
+//        effect.transform.position = PlayerBattleHelper.transform.position;
+//        Destroy(effect, 1);
+//
+//        if (EnemyBattleHelper.IsDead)
+//        {
+//            IsBattle = false;
+//            Destroy(PlayerBattleHelper.gameObject);
+//            StartCoroutine(CloseBattle());
+//        }
     }
 
-    public void DoDamage()
+    public void DoDamage(bool isEnemy)
     {
-        enemyAnimator.SetTrigger("Hit");
-        EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyUnitModel.AdditionalDamage);
+        if (isEnemy) enemyAnimator.SetTrigger(_hit);
+        else playerAnimator.SetTrigger(_hit);
+//        EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyUnitModel.AdditionalDamage);
         UpdateUI();
         
         if (EnemyBattleHelper.IsDead)
         {
-            enemyAnimator.SetTrigger("Death");
+            enemyAnimator.SetTrigger(_death);
             StartCoroutine(Delay(
                 enemyAnimator.GetDurationOfClip("FallenAngle_Death"),
                 () =>
@@ -142,7 +174,7 @@ public class BattleHelper : MonoBehaviour
             ));
         }
     }
-
+    
     public IEnumerator Delay(float seconds, Action func)
     {
         yield return new WaitForSeconds(seconds);
@@ -151,20 +183,26 @@ public class BattleHelper : MonoBehaviour
 
     public void Attack()
     {
-        playerAnimator.SetTrigger("Attack1");
-        DoDamage();
+        var socket = _globalStore.socket;
+        socket.Emit("pass move", "1");
+        playerAnimator.SetTrigger(_attack1);
+        DoDamage(false);
     }
 
     public void Maneuver()
     {
-        playerAnimator.SetTrigger("Attack2");
-        DoDamage();
+        var socket = _globalStore.socket;
+        socket.Emit("pass move", "2");
+        playerAnimator.SetTrigger(_attack2);
+        DoDamage(false);
     }
 
     public void Parry()
     {
-        playerAnimator.SetTrigger("Attack3");
-        DoDamage();
+        var socket = _globalStore.socket;
+        socket.Emit("pass move", "3");
+        playerAnimator.SetTrigger(_attack3);
+        DoDamage(false);
     }
 
     public void FightSpellButton()
