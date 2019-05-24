@@ -57,7 +57,7 @@ public class BattleHelper : MonoBehaviour
             
             PlayerBattleHelper.NewHp(result.Self.Model.Hp);
             EnemyBattleHelper.NewHp(result.Enemy.Model.Hp);
-
+            UpdateUI();
         };
         //InvokeRepeating("EnemyAttack", AttackSpeed, AttackSpeed);
     }
@@ -154,10 +154,10 @@ public class BattleHelper : MonoBehaviour
 
     public void DoDamage(bool isEnemy)
     {
-        if (isEnemy) enemyAnimator.SetTrigger(_hit);
-        else playerAnimator.SetTrigger(_hit);
+//        if (isEnemy) enemyAnimator.SetTrigger(_hit);
+//        else playerAnimator.SetTrigger(_hit);
 //        EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyUnitModel.AdditionalDamage);
-        UpdateUI();
+//        UpdateUI();
         
         if (EnemyBattleHelper.IsDead)
         {
@@ -247,7 +247,8 @@ public class BattleHelper : MonoBehaviour
         BattleVissibility(IsBattle);
 
 //        _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
-        Destroy(EnemyBattleHelper.gameObject);
+        if (PlayerBattleHelper != null) Destroy(PlayerBattleHelper.gameObject);
+        if (EnemyBattleHelper != null) Destroy(EnemyBattleHelper.gameObject);
     }
 
     public void SetAR()

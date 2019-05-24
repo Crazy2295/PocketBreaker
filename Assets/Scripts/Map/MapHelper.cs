@@ -39,11 +39,11 @@ public class MapHelper : MonoBehaviour
     {
         var battlefield = GameObject.Find("BattleField");
         var batlleHandlers = battlefield.GetComponent<BattleHandlers>();
-//        batlleHandlers.BattleInvited = character =>
-//        {
-////            FindObjectOfType<BattleHelper>().StartBattle();
-//            Debug.Log("Stub! Somebody attacked you");
-//        };
+        batlleHandlers.BattleInvited = character =>
+        {
+//            FindObjectOfType<BattleHelper>().StartBattle();
+            Debug.Log("Stub! Somebody attacked you");
+        };
         _playerAnimator = playerModelObject.GetComponent<Animator>();
         
         if (Input.location.status == LocationServiceStatus.Running)
