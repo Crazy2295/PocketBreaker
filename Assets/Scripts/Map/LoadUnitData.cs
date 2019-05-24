@@ -48,8 +48,14 @@ public class LoadUnitData : MonoBehaviour
 
                 });
 
-                var exceptUnits = Units.Except(newUnits).ToList();
-                foreach (var unit in exceptUnits)
+                var filteredUnits = new List<UnitModel>();
+                foreach (var newUnit in newUnits)
+                {
+                    if (!Units.Exists(unit => newUnit.Id == unit.Id))
+                        filteredUnits.Add(newUnit);
+                }
+
+                foreach (var unit in filteredUnits)
                 {
                     InstantiateUnit(unit);
                     Units.Add(unit);
