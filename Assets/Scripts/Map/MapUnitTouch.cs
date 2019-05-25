@@ -18,9 +18,9 @@ public class MapUnitTouch : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
         var socket = _globalStore.socket;
-        socket.Emit("start battle", "ai");
-        if (!EventSystem.current.IsPointerOverGameObject())
-            FindObjectOfType<BattleHelper>().StartBattle(unitModel);
+        socket.Emit("start battle", $"ai#{unitModel.Id}");
+        FindObjectOfType<BattleHelper>().StartBattle(unitModel);
     }
 }
