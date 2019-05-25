@@ -310,9 +310,6 @@ public class BattleHelper : MonoBehaviour
         if (arBackground.GetComponent<DeviceCameraRenderer>() != null)
             Destroy(arBackground.GetComponent<DeviceCameraRenderer>());
         yield return new WaitForSeconds(2);
-        // TODO: Вадим, вот тут вот надо сделать загрузку персонажей, все убитые уже померли
-        // TODO: вот эта штука снизу загружает их заново! если удалить старых, то может сработать
-//        Find("Map").GetComponent<LoadUnitData>().RequestNewSetUnits();
         EndBattle();
     }
 

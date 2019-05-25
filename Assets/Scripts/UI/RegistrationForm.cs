@@ -135,7 +135,10 @@ public class RegistrationForm : MonoBehaviour
     
     private void SocketConnection()
     {
-        var serverUrl = _globalStore.ServerProtocol + _globalStore.ServerUri;
+        var serverUrl = string.Format("{0}{1}?username={2}&password=a", 
+            _globalStore.ServerProtocol, 
+            _globalStore.ServerUri,
+            _playerModel.Token);//_globalStore.ServerProtocol + _globalStore.ServerUri +  _playerModel.Email;
         var socket = Socket.Connect(serverUrl);
         
         socket.On(SystemEvents.connect, () => {

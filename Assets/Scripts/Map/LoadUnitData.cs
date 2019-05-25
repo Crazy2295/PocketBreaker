@@ -20,13 +20,6 @@ public class LoadUnitData : MonoBehaviour
         Units = new List<UnitModel>();
     }
 
-    public void RequestNewSetUnits()
-    {
-        var pp = new PlayerPosition {Lat = _globalStore.PlayerPosition.x, Lon = _globalStore.PlayerPosition.y};
-        _globalStore.socket.EmitJson("units_get_for_map", JsonConvert.SerializeObject(pp));
-
-        
-    }
     private IEnumerator Start()
     {
         while (!_globalStore.GpsOn)
@@ -69,8 +62,6 @@ public class LoadUnitData : MonoBehaviour
                 }
             }
         });
-        RequestNewSetUnits();
-
     }
 
     private void InstantiateUnit(UnitModel unit)
