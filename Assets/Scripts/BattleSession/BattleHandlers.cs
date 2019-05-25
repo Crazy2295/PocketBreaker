@@ -19,10 +19,19 @@ public class BattleHandlers: MonoBehaviour
         socket.On("battle invited",
             json => BattleInvited(JsonConvert.DeserializeObject<Character>(json)));
     }
+    
+    public Action<MoveResult> EndBattle { get; set; }
+
+    public void BattleEnded(Socket socket)
+    {
+        socket.On("end battle", 
+            json => EndBattle(JsonConvert.DeserializeObject<MoveResult>(json)));
+    }
 
     public void ActivateAll(Socket socket)
     {
         GetMoveResult(socket);
         GetBattleInvite(socket);
+        BattleEnded(socket);
     }
 }

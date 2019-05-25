@@ -19,16 +19,19 @@ public class LoadUnitData : MonoBehaviour
         Units = new List<UnitModel>();
     }
 
+    public void RequestNewSetUnits()
+    {
+        var pp = new PlayerPosition {Lat = _globalStore.PlayerPosition.x, Lon = _globalStore.PlayerPosition.y};
+        _globalStore.socket.EmitJson("units_get_for_map", JsonConvert.SerializeObject(pp));
+
+        
+    }
     private IEnumerator Start()
     {
         while (!_globalStore.GpsOn)
         {
             yield return null;
         }
-
-
-        var pp = new PlayerPosition {Lat = _globalStore.PlayerPosition.x, Lon = _globalStore.PlayerPosition.y};
-        _globalStore.socket.EmitJson("units_get_for_map", JsonConvert.SerializeObject(pp));
 
         _globalStore.socket.On("units_get_for_map", (string data) =>
         {
@@ -40,6 +43,8 @@ public class LoadUnitData : MonoBehaviour
                 unit.UnitPrefab.AddComponent<MapUnitTouch>().unitModel = unit;
             }
         });
+        RequestNewSetUnits();
+
     }
 
     // Update is called once per frame
