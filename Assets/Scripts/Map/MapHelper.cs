@@ -152,6 +152,7 @@ public class MapHelper : MonoBehaviour
             mapRender.material.mainTexture = texDl.texture;
             
             _loadUnitData.GetUnits();
+            _loadUnitData.GetPlayers();
         }
         else
         {
