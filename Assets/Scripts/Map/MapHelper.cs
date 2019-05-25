@@ -40,6 +40,13 @@ public class MapHelper : MonoBehaviour
     
     private IEnumerator Start()
     {
+        var battlefield = GameObject.Find("BattleField");
+        var batlleHandlers = battlefield.GetComponent<BattleHandlers>();
+        batlleHandlers.BattleInvited = character =>
+        {
+//            FindObjectOfType<BattleHelper>().StartBattle();
+            Debug.Log("Stub! Somebody attacked you");
+        };
         _playerAnimator = playerModelObject.GetComponent<Animator>();
         
         if (Input.location.status == LocationServiceStatus.Running)
@@ -58,7 +65,7 @@ public class MapHelper : MonoBehaviour
         _iniRef = PositionHelper(_globalStore.PlayerPosition);
 
         LoadMap(_globalStore.PlayerPosition);
-
+        
         InvokeRepeating("UpdateMyPosition", 1, 0.5f);
         InvokeRepeating("UpdateMap", 1, 3f);
     }

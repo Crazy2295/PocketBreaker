@@ -137,7 +137,10 @@ public class LoginForm : MonoBehaviour
     }
     private void SocketConnection()
     {
-        var serverUrl = _globalStore.ServerProtocol + _globalStore.ServerUri;
+        var serverUrl = string.Format("{0}{1}?username={2}&password=a", 
+            _globalStore.ServerProtocol, 
+            _globalStore.ServerUri,
+            _playerModel.Token);//_globalStore.ServerProtocol + _globalStore.ServerUri +  _playerModel.Email;
         var socket = Socket.Connect(serverUrl);
         
         socket.On(SystemEvents.connect, () => {
@@ -160,6 +163,8 @@ public class LoginForm : MonoBehaviour
             Debug.Log("Socket connect TimeOut");
             _showError("Socket error");
         });
+
+        GameObject.Find("BattleField").GetComponent<BattleHandlers>().ActivateAll(socket);
     }
 
     private void _deactivateMainMenu()

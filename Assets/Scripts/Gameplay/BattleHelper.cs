@@ -1,7 +1,10 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
+using UnityEngine.Experimental.XR.Interaction;
+using UnityEngine.Internal.Experimental.UIElements;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using static UnityEngine.GameObject;
@@ -37,12 +40,72 @@ public class BattleHelper : MonoBehaviour
     PlayerHelper _playerHelper;
     LoadUnitData _loadUnitData;
     GlobalStore _globalStore;
-    
+    private Text _message;
+    private GameObject _messagePanel;
+    private static readonly int _attack1 = Animator.StringToHash("Attack1");
+    private static readonly int _attack3 = Animator.StringToHash("Attack3");
+    private static readonly int _attack2 = Animator.StringToHash("Attack2");
+    private static readonly int _hit = Animator.StringToHash("Hit");
+    private static readonly int _death = Animator.StringToHash("Death");
+
+    private string valueMessage(int value)
+    {
+        return value < 0 ? $"healed self for {-value}" : $"damaged for {value}";
+    }
+
     void Start()
     {
         _playerHelper = FindObjectOfType<PlayerHelper>();
         _loadUnitData = FindObjectOfType<LoadUnitData>();
         _globalStore = FindObjectOfType<GlobalStore>();
+
+        _messagePanel = Find("Canvas").FindObject("MessagePanel");
+        _message = _messagePanel.FindObject("Text").GetComponent<Text>();
+        
+        var battleHandlers = gameObject.GetComponent<BattleHandlers>();
+        battleHandlers.MoveGotResult = result =>
+        {
+            LockInterface(3f);
+            EnemyAttack(result.Enemy.Move.ActionType);
+            
+            PlayerBattleHelper.NewHp(result.Self.Model.Hp);
+            EnemyBattleHelper.NewHp(result.Enemy.Model.Hp);
+            var value = result.Self.ActualValue;
+            var enemyValue = result.Enemy.ActualValue;
+            ShowMessage($"Your move is {result.Self.Strength}! " +
+                        $"Your opponent {valueMessage(enemyValue)} " +
+                        $"You {valueMessage(value)}", 3f);
+            UpdateUI();
+        };
+
+        battleHandlers.EndBattle = result =>
+        {
+
+            if (result.Self.Model.Hp <= 0 && result.Enemy.Model.Hp <= 0)
+            {
+                ShowMessage("Nobody won, but you fought good!", 3f);
+                PlayerBattleHelper.IsDead = true;
+                DoDamage(PlayerBattleHelper, playerAnimator);
+                EnemyBattleHelper.IsDead = true;
+                DoDamage(EnemyBattleHelper, enemyAnimator);
+            } else if (result.Self.Model.Hp <= 0)
+            {
+                ShowMessage("You lost.", 3f);
+                PlayerBattleHelper.IsDead = true;
+                DoDamage(PlayerBattleHelper, playerAnimator);
+            } else if (result.Enemy.Model.Hp <= 0)
+            {
+                ShowMessage("Victory!", 3f);
+                EnemyBattleHelper.IsDead = true;
+                DoDamage(EnemyBattleHelper, enemyAnimator);
+            }
+            else
+            {
+                throw new ArgumentException(
+                    $"Ответ от сервера неверен! Мое HP = {result.Self.Model.Hp}, а у врага HP = {result.Enemy.Model.Hp}"
+                );
+            }
+        };
         //InvokeRepeating("EnemyAttack", AttackSpeed, AttackSpeed);
     }
 
@@ -70,6 +133,28 @@ public class BattleHelper : MonoBehaviour
         }
         arButton.image.color = color;
     }
+    private void ShowMessage(string message, float seconds)
+    {
+        _message.text = message;
+        _messagePanel.SetActive(true);
+        StartCoroutine(Delay(seconds,
+            () => _messagePanel.SetActive(false)
+        ));
+    }
+    public void LockInterface(float duration)
+    {
+        var canvas = Find("Canvas");
+        if (canvas == null) return;
+        var playerPanel = canvas.FindObject("PlayerPanel");
+        var enemyPanel = canvas.FindObject("EnemyPanel");
+        playerPanel.SetActive(false);
+        enemyPanel.SetActive(false);
+        StartCoroutine(Delay(duration, () =>
+        {
+            playerPanel.SetActive(true);
+            enemyPanel.SetActive(true);
+        }));
+    }
     public void StartBattle(UnitModel myUnitModel)
     {
         IsBattle = true;
@@ -90,6 +175,7 @@ public class BattleHelper : MonoBehaviour
         UpdateUI();
     }
 
+
     private void UpdateUI()
     {
         EnemyName.text = EnemyBattleHelper.Name;
@@ -101,48 +187,66 @@ public class BattleHelper : MonoBehaviour
         PlayerHealth.value = PlayerBattleHelper.Health;
     }
 
-    void EnemyAttack()
+    void EnemyAttack(int attackType)
     {
-        if (!IsBattle)
-            return;
-
-        PlayerBattleHelper.TakeDamage(EnemyBattleHelper.MyUnitModel.AdditionalDamage);
-        UpdateUI();
-
-        GameObject effect = Instantiate(AttackUnitPrefab[EnemyBattleHelper.MyUnitModel.UnitPrefabId]);
-        effect.transform.position = PlayerBattleHelper.transform.position;
-        Destroy(effect, 1);
-
-        if (EnemyBattleHelper.IsDead)
+        int trigger;
+        switch (attackType)
         {
-            IsBattle = false;
-            Destroy(PlayerBattleHelper.gameObject);
-            StartCoroutine(CloseBattle());
+            case 0: trigger = _attack1;
+                break;
+            case 1: trigger = _attack2;
+                break;
+            case 2: trigger = _attack3;
+                break;
+            default:
+                throw new ArgumentException("Unknown attack type");
         }
+        enemyAnimator.SetTrigger(trigger);
+        DoDamage(PlayerBattleHelper, playerAnimator);
+//        if (!IsBattle)
+//            return;
+//
+//        PlayerBattleHelper.TakeDamage(EnemyBattleHelper.MyUnitModel.AdditionalDamage);
+//        UpdateUI();
+//
+//        GameObject effect = Instantiate(AttackUnitPrefab[EnemyBattleHelper.MyUnitModel.UnitPrefabId]);
+//        effect.transform.position = PlayerBattleHelper.transform.position;
+//        Destroy(effect, 1);
+//
+//        if (EnemyBattleHelper.IsDead)
+//        {
+//            IsBattle = false;
+//            Destroy(PlayerBattleHelper.gameObject);
+//            StartCoroutine(CloseBattle());
+//        }
     }
 
-    public void DoDamage()
+    public void DoDamage(BattleUnitHelper characterBattleHelper, Animator characterAnimator)
     {
-        enemyAnimator.SetTrigger("Hit");
-        EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyUnitModel.AdditionalDamage);
-        UpdateUI();
+//        if (isEnemy) enemyAnimator.SetTrigger(_hit);
+//        else playerAnimator.SetTrigger(_hit);
+//        EnemyBattleHelper.TakeDamage(PlayerBattleHelper.MyUnitModel.AdditionalDamage);
+//        UpdateUI();
         
-        if (EnemyBattleHelper.IsDead)
+        if (characterBattleHelper.IsDead)
         {
-            enemyAnimator.SetTrigger("Death");
-            StartCoroutine(Delay(
-                enemyAnimator.GetDurationOfClip("FallenAngle_Death"),
+            characterAnimator.SetTrigger(_death);
+            if (!IsBattle) return;
+            var duration = enemyAnimator.GetDurationOfClip("FallenAngle_Death");
+            LockInterface(duration + 2);
+            IsBattle = false;
+            StartCoroutine(Delay(duration,
                 () =>
                 {
 //                    _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
-                    IsBattle = false;
 //                    Destroy(EnemyBattleHelper.gameObject);
                     StartCoroutine(CloseBattle());
                 }
             ));
+            
         }
     }
-
+    
     public IEnumerator Delay(float seconds, Action func)
     {
         yield return new WaitForSeconds(seconds);
@@ -151,20 +255,26 @@ public class BattleHelper : MonoBehaviour
 
     public void Attack()
     {
-        playerAnimator.SetTrigger("Attack1");
-        DoDamage();
+        var socket = _globalStore.socket;
+        socket.Emit("pass move", "1");
+        playerAnimator.SetTrigger(_attack1);
+        DoDamage(EnemyBattleHelper, enemyAnimator);
     }
 
     public void Maneuver()
     {
-        playerAnimator.SetTrigger("Attack2");
-        DoDamage();
+        var socket = _globalStore.socket;
+        socket.Emit("pass move", "2");
+        playerAnimator.SetTrigger(_attack2);
+        DoDamage(EnemyBattleHelper, enemyAnimator);
     }
 
     public void Parry()
     {
-        playerAnimator.SetTrigger("Attack3");
-        DoDamage();
+        var socket = _globalStore.socket;
+        socket.Emit("pass move", "3");
+        playerAnimator.SetTrigger(_attack3);
+        DoDamage(EnemyBattleHelper, enemyAnimator);
     }
 
     public void FightSpellButton()
@@ -200,6 +310,9 @@ public class BattleHelper : MonoBehaviour
         if (arBackground.GetComponent<DeviceCameraRenderer>() != null)
             Destroy(arBackground.GetComponent<DeviceCameraRenderer>());
         yield return new WaitForSeconds(2);
+        // TODO: Вадим, вот тут вот надо сделать загрузку персонажей, все убитые уже померли
+        // TODO: вот эта штука снизу загружает их заново! если удалить старых, то может сработать
+//        Find("Map").GetComponent<LoadUnitData>().RequestNewSetUnits();
         EndBattle();
     }
 
@@ -209,7 +322,8 @@ public class BattleHelper : MonoBehaviour
         BattleVissibility(IsBattle);
 
 //        _loadUnitData.DestroyUnit(EnemyBattleHelper.MyUnitModel);
-        Destroy(EnemyBattleHelper.gameObject);
+        if (PlayerBattleHelper != null) Destroy(PlayerBattleHelper.gameObject);
+        if (EnemyBattleHelper != null) Destroy(EnemyBattleHelper.gameObject);
     }
 
     public void SetAR()

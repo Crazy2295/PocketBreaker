@@ -30,8 +30,19 @@ public class BattleUnitHelper : MonoBehaviour
 
         MaxHealth = MyUnitModel.Hp;
         Health = MyUnitModel.Hp;
-//        Name = myUnitModel.UnitType.ToString();
-        Name = "AI";
+        Name = myUnitModel.UnitModification;
+//        Name = "AI";
+    }
+
+    internal void NewHp(int hp)
+    {
+        if (hp <= 0)
+        {
+            Health = 0;
+            IsDead = true;
+        }
+
+        Health = hp;
     }
 
     internal void TakeDamage(int damage)
