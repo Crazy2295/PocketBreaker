@@ -61,6 +61,11 @@ public class LoadUnitData : MonoBehaviour
         var pp = new PlayerPosition {Lat = _globalStore.PlayerPosition.x, Lon = _globalStore.PlayerPosition.y};
         _globalStore.socket.EmitJson("players_get_for_map", JsonConvert.SerializeObject(pp));
     }
+    IEnumerator Delay(float seconds, Action func)
+    {
+        yield return new WaitForSeconds(seconds);
+        func();
+    }
 
     private void SocketHandlers()
     {
@@ -111,11 +116,7 @@ public class LoadUnitData : MonoBehaviour
             ));
         });
 
-        IEnumerator Delay(float seconds, Action func)
-        {
-            yield return new WaitForSeconds(seconds);
-            func();
-        }
+        
 
         _globalStore.socket.On("players_get_for_map", (string data) =>
         {

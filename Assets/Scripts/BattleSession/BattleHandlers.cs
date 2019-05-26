@@ -12,12 +12,12 @@ public class BattleHandlers: MonoBehaviour
             json => { MoveGotResult(JsonConvert.DeserializeObject<MoveResult>(json)); });   
     }
     
-    public Action<Character> BattleInvited { get; set; }
+    public Action<UnitModel> BattleInvited { get; set; }
 
     public void GetBattleInvite(Socket socket)
     {
         socket.On("battle invited",
-            json => BattleInvited(JsonConvert.DeserializeObject<Character>(json)));
+            json => BattleInvited(JsonConvert.DeserializeObject<UnitModel>(json)));
     }
     
     public Action<MoveResult> EndBattle { get; set; }

@@ -44,8 +44,8 @@ public class MapHelper : MonoBehaviour
         var batlleHandlers = battlefield.GetComponent<BattleHandlers>();
         batlleHandlers.BattleInvited = character =>
         {
-//            FindObjectOfType<BattleHelper>().StartBattle();
-            Debug.Log("Stub! Somebody attacked you");
+            FindObjectOfType<BattleHelper>().StartBattle(character);
+//            Debug.Log("Stub! Somebody attacked you");
         };
         _playerAnimator = playerModelObject.GetComponent<Animator>();
         
