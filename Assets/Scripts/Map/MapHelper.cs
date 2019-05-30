@@ -53,7 +53,7 @@ public class MapHelper : MonoBehaviour
         {
             LocationInfo loc = Input.location.lastData;
 
-//            _globalStore.PlayerPosition = new Vector2(loc.latitude, loc.longitude);
+            _globalStore.PlayerPosition = new Vector2(loc.latitude, loc.longitude);
         }
 
         while (!_globalStore.GpsOn)
@@ -89,7 +89,7 @@ public class MapHelper : MonoBehaviour
         {
             LocationInfo loc = Input.location.lastData;
 
-//            _globalStore.PlayerPosition = new Vector2(loc.latitude, loc.longitude);
+            _globalStore.PlayerPosition = new Vector2(loc.latitude, loc.longitude);
 
             if (Vector3.Distance(_lastMapCenter, player.position) > DistanceMapUpdate)
                 UpdatedPosition = true;
