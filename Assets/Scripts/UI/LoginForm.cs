@@ -64,9 +64,9 @@ public class LoginForm : MonoBehaviour
             string url = _globalStore.ServerProtocol + _globalStore.ServerUri + "/api/token";
 
             UnityWebRequest uwr = UnityWebRequest.Get(url);
+            uwr.useHttpContinue = false;
             uwr.SetRequestHeader("AUTHORIZATION", authorization);
             yield return uwr.SendWebRequest();
-
             if (uwr.isNetworkError || uwr.isHttpError)
             {
                 Debug.Log("Error While Sending: " + uwr.error);

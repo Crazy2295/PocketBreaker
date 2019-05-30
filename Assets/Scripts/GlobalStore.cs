@@ -28,7 +28,7 @@ public class GlobalStore : MonoBehaviour
         PlayerPosition = new Vector2(47.24055f, 38.88323f);
         
         ServerProtocol = "http://";
-        ServerUri = "127.0.0.1:5000";
+        ServerUri = "pocketbreak.sytes.net";
 
         IsMainScreen = false;
         IsMenuMode = true;

@@ -20,7 +20,9 @@ public class MapUnitTouch : MonoBehaviour
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
         var socket = _globalStore.socket;
-        socket.Emit("start battle", $"ai#{unitModel.Id}");
+        var id = unitModel.UnitModification.Contains("@") ? 
+            unitModel.UnitModification : $"ai#{unitModel.Id}";
+        socket.Emit("start battle", id);
         FindObjectOfType<BattleHelper>().StartBattle(unitModel);
     }
 }

@@ -8,4 +8,18 @@ public class OtherPlayerModel
     public float Lon { get; set; }
     
     public GameObject PlayerPrefab { get; set; }
+
+    public UnitModel AsUnitModel()
+    {
+        return new UnitModel
+        {
+            Id = -1,
+            UnitPrefabId = 1,
+            UnitPrefab = PlayerPrefab,
+            Hp = 100,
+            Lat = Lat,
+            Lon = Lon,
+            UnitModification = Email
+        };
+    }
 }

@@ -48,6 +48,7 @@ public class LoadUnitData : MonoBehaviour
     {
         player.PlayerPrefab = Instantiate(unitPrefabs[0], allPlayers.transform, false);
         player.PlayerPrefab.GetComponent<SetGeolocation>().SetLocation(player.Lat, player.Lon);
+        player.PlayerPrefab.AddComponent<MapUnitTouch>().unitModel = player.AsUnitModel();
     }
 
     public void GetUnits()
