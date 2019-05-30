@@ -102,9 +102,10 @@ public class LoginForm : MonoBehaviour
 
     private IEnumerator UserDataRequest(bool autoConnect=false)
     {
-        string url = _globalStore.ServerProtocol + _playerModel.Token + "@" + _globalStore.ServerUri + "/api/users/" + _playerModel.Email;
+        string url = _globalStore.ServerProtocol + _globalStore.ServerUri + "/api/users/" + _playerModel.Email;
 
         UnityWebRequest uwr = UnityWebRequest.Get(url);
+        uwr.SetRequestHeader("AUTHORIZATION", Authenticate(_playerModel.Token, "s"));
         yield return uwr.SendWebRequest();
 
         if (uwr.isNetworkError || uwr.isHttpError)
