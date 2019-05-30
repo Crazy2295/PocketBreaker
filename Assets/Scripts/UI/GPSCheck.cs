@@ -24,21 +24,21 @@ public class GPSCheck : MonoBehaviour
         if (_globalStore.IsMenuMode) 
             return;
         
-        _globalStore.GpsOn = true;
+//        _globalStore.GpsOn = true;
         
-//        if (!Input.location.isEnabledByUser ||
-//            Input.location.status == LocationServiceStatus.Stopped ||
-//            Input.location.status == LocationServiceStatus.Failed)
-//        {
-//            _globalStore.GpsOn = false;
-//            GPSErrorUI.SetActive(true);
-//        }
-//        else
-//        {
-//            _globalStore.GpsOn = true;
-//            GPSErrorUI.SetActive(false);
-//
-//            Input.location.Start(5, 5);
-//        }
+        if (!Input.location.isEnabledByUser ||
+            Input.location.status == LocationServiceStatus.Stopped ||
+            Input.location.status == LocationServiceStatus.Failed)
+        {
+            _globalStore.GpsOn = false;
+            GPSErrorUI.SetActive(true);
+        }
+        else
+        {
+            _globalStore.GpsOn = true;
+            GPSErrorUI.SetActive(false);
+
+            Input.location.Start(5, 5);
+        }
     }
 }
