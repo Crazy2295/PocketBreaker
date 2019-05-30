@@ -4,6 +4,7 @@ using System.Collections;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Units;
 
@@ -62,10 +63,11 @@ public class LoadUnitData : MonoBehaviour
         var pp = new PlayerPosition {Lat = _globalStore.PlayerPosition.x, Lon = _globalStore.PlayerPosition.y};
         _globalStore.socket.EmitJson("players_get_for_map", JsonConvert.SerializeObject(pp));
     }
-    IEnumerator Delay(float seconds, Action func)
+    private async void UnitDestroy(UnitModel unit)
     {
-        yield return new WaitForSeconds(seconds);
-        func();
+        await Task.Delay(5000);
+        Destroy(unit.UnitPrefab);
+        Units.Remove(unit);
     }
 
     private void SocketHandlers()
@@ -112,9 +114,18 @@ public class LoadUnitData : MonoBehaviour
             
             var unitPref = Units[unitInList].UnitPrefab;
             unitPref.GetComponent<Animator>().SetTrigger("Death");
-            StartCoroutine(Delay(unitPref.GetComponent<Animator>().GetDurationOfClip("FallenAngle_Death"),
-                () => { Destroy(unit.UnitPrefab); }
-            ));
+            UnitDestroy(Units[unitInList]);
+        });
+        
+        _globalStore.socket.On("players_disconnect", (string data) =>
+        {
+            var player = JsonConvert.DeserializeObject<OtherPlayerModel>((string) data);
+            var playerInList = Players.FindIndex(x => x.Email == player.Email);
+
+            if (playerInList == -1) return;
+            
+            Destroy(Players[playerInList].PlayerPrefab);
+            Players.Remove(Players[playerInList]);
         });
 
         
