@@ -229,7 +229,8 @@ public class BattleHelper : MonoBehaviour
         {
             characterAnimator.SetTrigger(_death);
             if (!IsBattle) return;
-            var duration = enemyAnimator.GetDurationOfClip("FallenAngle_Death");
+
+            var duration = 2;//enemyAnimator.GetDurationOfClip("FallenAngle_Death");
             LockInterface(duration + 2);
             IsBattle = false;
             StartCoroutine(Delay(duration,
