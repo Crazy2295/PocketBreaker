@@ -62,7 +62,8 @@ public class BattleHelper : MonoBehaviour
         var battleHandlers = gameObject.GetComponent<BattleHandlers>();
         battleHandlers.MoveGotResult = result =>
         {
-            LockInterface(3f);
+            
+            LockInterface(0, false);
             EnemyAttack(result.Enemy.Move.ActionType);
             
             PlayerBattleHelper.NewHp(result.Self.Model.Hp);
@@ -77,7 +78,6 @@ public class BattleHelper : MonoBehaviour
 
         battleHandlers.EndBattle = result =>
         {
-
             if (result.Self.Model.Hp <= 0 && result.Enemy.Model.Hp <= 0)
             {
                 ShowMessage("Nobody won, but you fought good!", 3f);
@@ -138,19 +138,30 @@ public class BattleHelper : MonoBehaviour
             () => _messagePanel.SetActive(false)
         ));
     }
-    public void LockInterface(float duration)
+    public void LockInterface(float duration = 0, bool isLocking = true)
     {
         var canvas = Find("Canvas");
         if (canvas == null) return;
         var playerPanel = canvas.FindObject("PlayerPanel");
         var enemyPanel = canvas.FindObject("EnemyPanel");
-        playerPanel.SetActive(false);
-        enemyPanel.SetActive(false);
-        StartCoroutine(Delay(duration, () =>
+
+        playerPanel.FindObject("AttackButton").GetComponent<Button>().interactable = !isLocking;
+        playerPanel.FindObject("MeneuverButton").GetComponent<Button>().interactable = !isLocking;
+        playerPanel.FindObject("ParryButton").GetComponent<Button>().interactable = !isLocking;
+        
+//        playerPanel.SetActive(false);
+//        enemyPanel.SetActive(false);   
+        if (duration > 0)
         {
-            playerPanel.SetActive(true);
-            enemyPanel.SetActive(true);
-        }));
+            StartCoroutine(Delay(duration, () =>
+            {
+                playerPanel.FindObject("AttackButton").GetComponent<Button>().interactable = isLocking;
+                playerPanel.FindObject("MeneuverButton").GetComponent<Button>().interactable = isLocking;
+                playerPanel.FindObject("ParryButton").GetComponent<Button>().interactable = isLocking;
+                playerPanel.SetActive(true);
+                enemyPanel.SetActive(true);
+            }));
+        }
     }
     public void StartBattle(UnitModel myUnitModel)
     {
@@ -253,6 +264,10 @@ public class BattleHelper : MonoBehaviour
 
     public void Attack()
     {
+        var canvas = Find("Canvas");
+        var playerPanel = canvas.FindObject("PlayerPanel");
+        playerPanel.FindObject("AttackButton").GetComponent<Button>().OnSelect(null);
+        LockInterface(0, true);
         var socket = _globalStore.socket;
         socket.Emit("pass move", "1");
         playerAnimator.SetTrigger(_attack1);
@@ -261,6 +276,10 @@ public class BattleHelper : MonoBehaviour
 
     public void Maneuver()
     {
+        var canvas = Find("Canvas");
+        var playerPanel = canvas.FindObject("PlayerPanel");
+        playerPanel.FindObject("MeneuverButton").GetComponent<Button>().OnSelect(null);
+        LockInterface(0, true);
         var socket = _globalStore.socket;
         socket.Emit("pass move", "2");
         playerAnimator.SetTrigger(_attack2);
@@ -269,6 +288,11 @@ public class BattleHelper : MonoBehaviour
 
     public void Parry()
     {
+        var canvas = Find("Canvas");
+        var playerPanel = canvas.FindObject("PlayerPanel");
+        playerPanel.FindObject("ParryButton").GetComponent<Button>().OnSelect(null);
+        
+        LockInterface(0, true);
         var socket = _globalStore.socket;
         socket.Emit("pass move", "3");
         playerAnimator.SetTrigger(_attack3);
