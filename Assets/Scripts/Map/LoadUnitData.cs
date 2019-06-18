@@ -13,6 +13,7 @@ public class LoadUnitData : MonoBehaviour
     public GameObject allUnits;
     public GameObject allPlayers;
     public GameObject[] unitPrefabs;
+    public GameObject mainUI;
     public List<UnitModel> Units { get; set; }
     public List<OtherPlayerModel> Players { get; set; }
 
@@ -43,6 +44,7 @@ public class LoadUnitData : MonoBehaviour
         unit.UnitPrefab = Instantiate(unitPrefabs[unit.UnitPrefabId - 1], allUnits.transform, false);
         unit.UnitPrefab.GetComponent<SetGeolocation>().SetLocation(unit.Lat, unit.Lon);
         unit.UnitPrefab.AddComponent<MapUnitTouch>().unitModel = unit;
+        unit.UnitPrefab.GetComponent<MapUnitTouch>().UI = mainUI.FindObject("UnitInfo");
     }
 
     private void InstantiatePlayer(OtherPlayerModel player)
@@ -50,6 +52,7 @@ public class LoadUnitData : MonoBehaviour
         player.PlayerPrefab = Instantiate(unitPrefabs[0], allPlayers.transform, false);
         player.PlayerPrefab.GetComponent<SetGeolocation>().SetLocation(player.Lat, player.Lon);
         player.PlayerPrefab.AddComponent<MapUnitTouch>().unitModel = player.AsUnitModel();
+        player.PlayerPrefab.GetComponent<MapUnitTouch>().UI = mainUI.FindObject("UnitInfo");
     }
 
     public void GetUnits()
