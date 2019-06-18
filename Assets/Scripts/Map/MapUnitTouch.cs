@@ -37,6 +37,9 @@ public class MapUnitTouch : MonoBehaviour
             _textFields[2].text = unitModel.AdditionalDamage.ToString();
 
         _buttons = UI.GetComponentsInChildren<Button>();
+        _buttons[0].onClick.RemoveAllListeners();
+        _buttons[1].onClick.RemoveAllListeners();
+        
         _buttons[0].onClick.AddListener(GoFight);
         _buttons[1].onClick.AddListener(Decline);
 
@@ -55,5 +58,7 @@ public class MapUnitTouch : MonoBehaviour
     void Decline()
     {
         UI.SetActive(false);
+        _buttons[0].onClick.RemoveAllListeners();
+        _buttons[1].onClick.RemoveAllListeners();
     }
 }
